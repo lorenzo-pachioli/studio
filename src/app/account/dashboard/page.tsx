@@ -36,7 +36,7 @@ export default function DashboardPage() {
           <CardContent>
             {recentOrder ? (
               <>
-                <p className="text-sm text-muted-foreground">Order ID: {recentOrder.id}</p>
+                <p className="text-sm text-muted-foreground">Order ID: {recentOrder.uid}</p>
                 <p className="text-2xl font-bold">${recentOrder.total.toFixed(2)}</p>
                 <p className={`text-sm font-medium ${recentOrder.status === 'Delivered' ? 'text-green-600' : 'text-yellow-600'}`}>Status: {recentOrder.status}</p>
               </>

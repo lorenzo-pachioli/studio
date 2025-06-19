@@ -46,7 +46,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
             photoURL: userData.photoURL || '',
             email: userData.email || email,
             emailVerified: userData.emailVerified || false,
-            location: userData.location || []
+            location: userData.location || [],
+            boughtProducts: userData.boughtProducts || [],
+            boughtServices: userData.boughtServices || []
           };
           userLocalStorage(userCredential.uid);
           console.log("AppProvider user (auth-form)", newUser);
@@ -70,7 +72,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
             photoURL: userCredential.user.photoURL || '',
             email: userCredential.user.email || email,
             emailVerified: userCredential.user.emailVerified || false,
-            location: []
+            location: [],
+            boughtProducts: [],
+            boughtServices: []
           };
           
           // Save the new user data to the database

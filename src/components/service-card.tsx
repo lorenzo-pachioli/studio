@@ -11,10 +11,11 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service }: ServiceCardProps) {
+
   return (
     <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
       <CardHeader className="p-0">
-        <Link href={`/services/${service.id}`} aria-label={`View details for ${service.name}`}>
+        <Link href={`/services/${service.uid}`} aria-label={`View details for ${service.name}`}>
           <Image
             src={service.imageUrl}
             alt={service.name}
@@ -27,7 +28,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <Badge variant="secondary" className="mb-2 bg-secondary/70 text-secondary-foreground">{service.category}</Badge>
-        <Link href={`/services/${service.id}`}>
+        <Link href={`/services/${service.uid}`}>
          <CardTitle className="text-lg font-semibold mb-1 hover:text-primary transition-colors">{service.name}</CardTitle>
         </Link>
         <p className="text-sm text-muted-foreground mb-2 h-10 overflow-hidden">{service.description}</p>
@@ -57,7 +58,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       </CardContent>
       <CardFooter className="p-4 border-t">
         <Button asChild variant="outline" className="w-full hover:bg-primary/10 hover:text-primary border-primary/50 text-primary">
-          <Link href={`/services/${service.id}`}>
+          <Link href={`/services/${service.uid}`}>
             View Details <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>

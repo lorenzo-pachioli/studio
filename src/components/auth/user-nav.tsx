@@ -39,7 +39,9 @@ function useAuth() {
       photoURL: "",
       location: [],
       email: "",
-      emailVerified: false
+      emailVerified: false,
+      boughtProducts: [],
+      boughtServices: []
     };
 
     setIsAuthenticated(false);

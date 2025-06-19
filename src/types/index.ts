@@ -5,9 +5,12 @@ export interface IUser {
   location?: ILocation[];
   email: string | null; 
   emailVerified: boolean; 
+  boughtProducts?: string[]; // Array of Product document IDs
+  boughtServices?: string[]; // Array of Service document IDs
 }
 
 interface ILocation{
+  uid: string;
   name: string;
   city: string;
   state: string;
@@ -16,7 +19,7 @@ interface ILocation{
 }
 
 export interface Product {
-  id: string;
+  uid: string; // Firebase document ID
   name: string;
   description: string;
   price: number;
@@ -30,7 +33,7 @@ export interface Product {
 }
 
 export interface Service {
-  id: string;
+  uid: string; // Firebase document ID
   name: string;
   description: string;
   category: string; // e.g., Vet, Grooming, Training
@@ -42,7 +45,7 @@ export interface Service {
 }
 
 export interface Promotion {
-  id: string;
+  uid: string;
   title: string;
   description: string;
   imageUrl: string;

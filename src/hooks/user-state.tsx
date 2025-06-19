@@ -18,7 +18,9 @@ export const AppContext = createContext<{
       photoURL: "",
       location: [],
       email: "",
-      emailVerified: false
+      emailVerified: false,
+      boughtProducts: [],
+      boughtServices: []
     },
     setUser: () => {},
     userLocalStorage: () => {},

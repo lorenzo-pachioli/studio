@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
       <CardHeader className="p-0 relative">
-        <Link href={`/products/${product.id}`} aria-label={`View details for ${product.name}`}>
+        <Link href={`/products/${product.uid}`} aria-label={`View details for ${product.name}`}>
           <Image
             src={product.imageUrl}
             alt={product.name}
@@ -44,7 +44,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </CardHeader>
       <CardContent className="p-4 flex-grow">
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/products/${product.uid}`}>
           <CardTitle className="text-lg font-semibold mb-1 hover:text-primary transition-colors">{product.name}</CardTitle>
         </Link>
         <p className="text-sm text-muted-foreground mb-2 h-10 overflow-hidden">{product.description}</p>

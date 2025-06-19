@@ -38,6 +38,7 @@ export default function AddressesPage() {
     state: '',
     zip: '',
     isDefault: false,
+    addressLine2: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -63,7 +64,7 @@ export default function AddressesPage() {
   };
 
   const handleDeleteAddress = (id: string) => {
-    setAddresses(prev => prev.filter(addr => addr.id !== id));
+    setAddresses(prev => prev.filter(addr => addr.uid !== id));
     toast({ title: 'Address Deleted', description: 'The address has been removed.' });
   };
   
@@ -71,7 +72,7 @@ export default function AddressesPage() {
     setAddresses(prevAddresses => 
       prevAddresses.map(addr => ({
         ...addr,
-        isDefault: addr.id === id,
+        isDefault: addr.uid === id,
       }))
     );
     toast({ title: 'Default Address Updated', description: 'The default shipping address has been changed.' });
@@ -85,12 +86,12 @@ export default function AddressesPage() {
 
     if (editingAddress) {
       // Update existing address
-      setAddresses(prev => prev.map(addr => addr.id === editingAddress.id ? { ...editingAddress, ...formAddress } as Address : addr));
+      setAddresses(prev => prev.map(addr => addr.uid === editingAddress.uid ? { ...editingAddress, ...formAddress } as Address : addr));
       toast({ title: 'Address Updated', description: 'Your address has been successfully updated.' });
     } else {
       // Add new address
       const newAddress: Address = {
-        id: `ADDR${Date.now()}`, // Simple unique ID
+        uid: `ADDR${Date.now()}`, // Simple unique ID
         ...formAddress
       } as Address;
       setAddresses(prev => [newAddress, ...prev]);
@@ -115,7 +116,7 @@ export default function AddressesPage() {
       {addresses.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {addresses.map((address) => (
-            <Card key={address.id} className={`hover:shadow-lg transition-shadow ${address.isDefault ? 'border-2 border-primary' : ''}`}>
+            <Card key={address.uid} className={`hover:shadow-lg transition-shadow ${address.isDefault ? 'border-2 border-primary' : ''}`}>
               <CardHeader>
                 <div className="flex justify-between items-start">
                     <div>
@@ -131,7 +132,7 @@ export default function AddressesPage() {
                             <span className="sr-only">Edit</span>
                         </Button>
                         {!address.isDefault && (
-                             <Button variant="ghost" size="icon" onClick={() => handleDeleteAddress(address.id)} className="h-8 w-8 hover:text-destructive">
+                             <Button variant="ghost" size="icon" onClick={() => handleDeleteAddress(address.uid)} className="h-8 w-8 hover:text-destructive">
                                 <Trash2 className="h-4 w-4" />
                                 <span className="sr-only">Delete</span>
                             </Button>
@@ -146,7 +147,7 @@ export default function AddressesPage() {
               </CardContent>
               {!address.isDefault && (
                 <CardFooter>
-                    <Button variant="outline" size="sm" onClick={() => handleSetDefault(address.id)} className="border-primary/50 text-primary hover:bg-primary/10">
+                    <Button variant="outline" size="sm" onClick={() => handleSetDefault(address.uid)} className="border-primary/50 text-primary hover:bg-primary/10">
                         Set as Default
                     </Button>
                 </CardFooter>
