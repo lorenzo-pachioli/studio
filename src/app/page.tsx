@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -6,6 +8,8 @@ import ServiceCard from '@/components/service-card';
 import { mockProducts, mockServices, mockPromotions } from '@/lib/data';
 import { ArrowRight, PawPrint, CheckCircle, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AppContext } from '@/hooks/user-state';
+import { useContext } from 'react';
 
 export default function HomePage() {
   const featuredProducts = mockProducts.slice(0, 3);

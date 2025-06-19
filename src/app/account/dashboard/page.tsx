@@ -1,24 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockOrderHistory, mockAddresses } from '@/lib/data';
 import { ArrowRight, ShoppingBag, MapPin, UserCircle } from 'lucide-react';
+import { AppContext } from '@/hooks/user-state';
 
 export default function DashboardPage() {
-  const [userName, setUserName] = useState("User");
+  const {
+          user,
+          setUser,
+          isAuthenticated, 
+          setIsAuthenticated
+  } = useContext(AppContext);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedAuth = localStorage.getItem('pawsomeMartAuth');
-      if (storedAuth) {
-        const authData = JSON.parse(storedAuth);
-        setUserName(authData.userName || "User");
-      }
-    }
-  }, []);
   
   const recentOrder = mockOrderHistory.length > 0 ? mockOrderHistory[0] : null;
   const defaultAddress = mockAddresses.find(addr => addr.isDefault);
@@ -26,7 +23,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-3xl font-semibold tracking-tight">Welcome back, {userName}!</h2>
+        <h2 className="text-3xl font-semibold tracking-tight">Welcome back, {user.displayName}!</h2>
         <p className="text-muted-foreground">Here's a quick overview of your account.</p>
       </div>
 
@@ -87,8 +84,8 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-3 mb-4">
                 <UserCircle className="h-8 w-8 text-primary"/>
                 <div>
-                    <p className="font-semibold">{userName}</p>
-                    <p className="text-sm text-muted-foreground">{userName?.toLowerCase().replace(' ', '.')}@example.com</p>
+                    <p className="font-semibold">{user.displayName}</p>
+                    <p className="text-sm text-muted-foreground">{user.email}</p>
                 </div>
             </div>
              <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary/10">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,46 +9,83 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from '@/hooks/use-toast';
 import { PawPrintIcon } from '@/components/icons';
 import { Loader2 } from 'lucide-react';
+import logInWithEmail, { userAuth } from '@/services/autentication';
+import { auth } from '@/services/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { AppContext } from '@/hooks/user-state';
+import { getDataById, setData } from '@/services/operations';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
 }
 
 export default function AuthForm({ mode }: AuthFormProps) {
+
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState(''); // For registration
+  const {setUser,userLocalStorage,setIsAuthenticated} = useContext(AppContext);
 
-  // Mock function to simulate login/registration from UserNav
-  const mockUserNavLogin = (userName?: string) => {
-     if (typeof window !== 'undefined') {
-      localStorage.setItem('pawsomeMartAuth', JSON.stringify({ isAuthenticated: true, userName: userName || "Pawsome User" }));
-    }
-  };
-
+  
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
     if (mode === 'login') {
-      if (email === 'user@example.com' && password === 'password123') {
-        toast({ title: 'Login Successful!', description: 'Welcome back!' });
-        mockUserNavLogin('Demo User'); // Use the name if available, or a default
-        router.push('/account/dashboard');
-      } else {
-        toast({ variant: 'destructive', title: 'Login Failed', description: 'Invalid email or password.' });
+      try{
+        const userCredential = await logInWithEmail(email, password); 
+        const userData = await getDataById('users', userCredential.uid);
+        if (userData) {
+          const newUser = {
+            uid: userData.uid,
+            displayName: userData.displayName || name, // Use provided name if available
+            photoURL: userData.photoURL || '',
+            email: userData.email || email,
+            emailVerified: userData.emailVerified || false,
+            location: userData.location || []
+          };
+          userLocalStorage(userCredential.uid);
+          console.log("AppProvider user (auth-form)", newUser);
+          setUser(newUser);
+          setIsAuthenticated(true);
+          toast({ title: 'Login Successful!', description: 'Welcome back!' });
+          router.push('/account/dashboard');
+        }
+      } catch (error) {
+          console.error('Login failed', error);
+          toast({ variant: 'destructive', title: 'Login Failed', description: 'Invalid email or password.' })
       }
+        
     } else { // Register mode
-      if (name && email && password) {
-        toast({ title: 'Registration Successful!', description: 'Welcome to PawsomeMart!' });
-        mockUserNavLogin(name);
-        router.push('/account/dashboard');
+      if (email && password) {                               // signup validation
+        try{
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const userData = {
+            uid: userCredential.user.uid,
+            displayName: name || userCredential.user.email, // Use provided name if available
+            photoURL: userCredential.user.photoURL || '',
+            email: userCredential.user.email || email,
+            emailVerified: userCredential.user.emailVerified || false,
+            location: []
+          };
+          
+          // Save the new user data to the database
+          await setData('users', userData.uid, userData);
+          
+          // Update local state and local storage
+          userLocalStorage(userData.uid);
+          setUser(userData);
+          setIsAuthenticated(true);
+          toast({ title: 'Registration Successful!', description: 'Welcome to PawsomeMart!' });
+          router.push('/account/dashboard');
+        } catch (error) {
+          console.error('Registration failed', error);
+          toast({ variant: 'destructive', title: 'Registration Failed', description: 'An error occurred while creating your account.' });
+        }
       } else {
          toast({ variant: 'destructive', title: 'Registration Failed', description: 'Please fill all fields.' });
       }
@@ -59,6 +96,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-20rem)] py-12">
       <Card className="w-full max-w-md shadow-xl">
+        
         <CardHeader className="text-center">
           <PawPrintIcon className="mx-auto h-12 w-12 text-primary mb-2" />
           <CardTitle className="text-3xl font-bold">
@@ -68,8 +106,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
             {mode === 'login' ? 'Log in to access your account.' : 'Create an account to get started.'}
           </CardDescription>
         </CardHeader>
+
         <CardContent>
+
           <form onSubmit={handleSubmit} className="space-y-6">
+
             {mode === 'register' && (
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
@@ -84,6 +125,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 />
               </div>
             )}
+
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <Input 
@@ -96,6 +138,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 disabled={isLoading}
               />
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input 
@@ -108,6 +151,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 disabled={isLoading}
               />
             </div>
+
             <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-3" disabled={isLoading}>
               {isLoading ? (
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -117,6 +161,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             </Button>
           </form>
         </CardContent>
+        
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
             {mode === 'login' ? "Don't have an account? " : "Already have an account? "}

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useContext } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, UserCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { AppContext } from '@/hooks/user-state';
 
 export default function ProfilePage() {
   const { toast } = useToast();
@@ -16,21 +17,13 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
+  const [confirmPassword, setConfirmPassword] = useState(''); 
+  const {user, setUser,userLocalStorage,isAuthenticated,setIsAuthenticated} = useContext(AppContext);
+  
   useEffect(() => {
-    // Load user data (mock)
-    if (typeof window !== 'undefined') {
-      const storedAuth = localStorage.getItem('pawsomeMartAuth');
-      if (storedAuth) {
-        const authData = JSON.parse(storedAuth);
-        setName(authData.userName || 'Demo User');
-        setEmail(authData.userName?.toLowerCase().replace(' ','.') + '@example.com' || 'demo.user@example.com');
-      } else {
-        // Default if not logged in (though this page should be protected)
-        setName('Demo User');
-        setEmail('demo.user@example.com');
-      }
+    if (typeof window !== 'undefined' && user.email && user.displayName) {
+      setName(user.displayName );
+      setEmail(user.email);
     }
   }, []);
 
@@ -78,8 +71,8 @@ export default function ProfilePage() {
       <div className="flex items-center space-x-4 p-4 bg-secondary/20 rounded-lg">
         <UserCircle className="h-16 w-16 text-primary" />
         <div>
-          <h3 className="text-xl font-semibold">{name}</h3>
-          <p className="text-muted-foreground">{email}</p>
+          <h3 className="text-xl font-semibold">{user.displayName}</h3>
+          <p className="text-muted-foreground">{user.email}</p>
         </div>
       </div>
 

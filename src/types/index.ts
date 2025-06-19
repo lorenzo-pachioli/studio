@@ -1,3 +1,20 @@
+export interface IUser {
+  uid: string;
+  displayName: string | null;
+  photoURL: string | null;
+  location?: ILocation[];
+  email: string | null; 
+  emailVerified: boolean; 
+}
+
+interface ILocation{
+  name: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+}
+
 export interface Product {
   id: string;
   name: string;

@@ -13,55 +13,57 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User, LogIn, UserPlus, LayoutDashboard, LogOut, ShoppingBag, MapPin } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AppContext } from '@/hooks/user-state';
+import { IUser } from '@/types';
+import { getUser } from '@/services/operations';
+import logInWithEmail from '@/services/autentication';
 
 
 // Mock authentication state
 function useAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userName, setUserName] = useState("Guest User"); // Default user name
 
-  useEffect(() => {
-    // In a real app, you'd check auth status here (e.g., from localStorage, context, or an API call)
-    // For this mock, let's randomly decide if the user is authenticated or not
-    // This check needs to be client-side only to avoid hydration issues
-    if (typeof window !== 'undefined') {
-      const storedAuth = localStorage.getItem('pawsomeMartAuth');
-      if (storedAuth) {
-        const authData = JSON.parse(storedAuth);
-        setIsAuthenticated(authData.isAuthenticated);
-        setUserName(authData.userName || "User");
-      }
-    }
-  }, []);
+  const {
+          user,
+          setUser,
+          isAuthenticated, 
+          setIsAuthenticated
+  } = useContext(AppContext);
 
-
-  const login = (name = "Pawsome User") => {
-    setIsAuthenticated(true);
-    setUserName(name);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('pawsomeMartAuth', JSON.stringify({ isAuthenticated: true, userName: name }));
-    }
-  };
+  // Mock logout function
   const logout = () => {
+
+    const userNull: IUser = {
+      uid: "",
+      displayName: "",
+      photoURL: "",
+      location: [],
+      email: "",
+      emailVerified: false
+    };
+
     setIsAuthenticated(false);
-    setUserName("Guest User");
+    setUser(userNull);
+
     if (typeof window !== 'undefined') {
       localStorage.removeItem('pawsomeMartAuth');
     }
   };
 
-  return { isAuthenticated, login, logout, userName };
+  return { isAuthenticated, logout, user };
 }
 
 
 export default function UserNav() {
-  const { isAuthenticated, logout, userName } = useAuth();
+
+  const {  logout } = useAuth();
   const [isClient, setIsClient] = useState(false);
+  const {user, isAuthenticated} = useContext(AppContext);
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    console.log("is authenticated: (user-nav)", isAuthenticated);
+  }, [isAuthenticated]);
 
   if (!isClient) {
     // Render a placeholder or null during SSR to avoid hydration mismatch
@@ -75,13 +77,13 @@ export default function UserNav() {
 
 
   if (isAuthenticated) {
-    const userInitial = userName?.charAt(0).toUpperCase() || 'U';
+    const userInitial = user.displayName?.charAt(0).toUpperCase() || 'U';
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
             <Avatar className="h-10 w-10 border-2 border-primary">
-              <AvatarImage src="https://placehold.co/100x100.png" alt={userName || "User"} data-ai-hint="avatar person" />
+              <AvatarImage src="https://placehold.co/100x100.png" alt={user.displayName || "User"} data-ai-hint="avatar person" />
               <AvatarFallback className="bg-accent text-accent-foreground">{userInitial}</AvatarFallback>
             </Avatar>
           </Button>
@@ -89,9 +91,9 @@ export default function UserNav() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{userName}</p>
+              <p className="text-sm font-medium leading-none">{user.displayName}</p>
               <p className="text-xs leading-none text-muted-foreground">
-                {userName?.toLowerCase().replace(' ', '.')}@example.com
+                {user.email || 'No email provided'}
               </p>
             </div>
           </DropdownMenuLabel>
@@ -136,7 +138,7 @@ export default function UserNav() {
     <div className="flex items-center space-x-2">
       <Button asChild variant="ghost" className="hover:bg-accent/20 hover:text-accent">
         <Link href="/login">
-          <LogIn className="mr-2 h-5 w-5" />
+          <LogIn className="mr-2 h-5 w-5"/>
           Login
         </Link>
       </Button>
