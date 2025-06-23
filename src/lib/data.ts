@@ -1,31 +1,4 @@
-import type { Promotion } from '@/types'; 
-
-export const mockPromotions: Promotion[] = [
-  {
-    uid: 'p1',
-    title: '20% Off All Dog Food!',
-    description: 'Stock up on your furry friend\'s favorite meals. Limited time offer.',
-    imageUrl: 'https://placehold.co/600x400.png',
-    link: '/products?category=Food&species=Dog',
-    dataAiHint: 'dog food sale',
-  },
-  {
-    uid: 'p2',
-    title: 'New Arrival: Cat Toys',
-    description: 'Explore our latest collection of interactive and fun cat toys.',
-    imageUrl: 'https://placehold.co/600x400.png',
-    link: '/products?category=Toys&species=Cat',
-    dataAiHint: 'cat toys new',
-  },
-   {
-    uid: 'p3',
-    title: 'Free Vet Consultation Coupon',
-    description: 'Sign up today and get a coupon for a free initial vet consultation with our partners.',
-    imageUrl: 'https://placehold.co/600x400.png',
-    link: '/services?category=Veterinary',
-    dataAiHint: 'vet consultation offer',
-  }
-];
+ 
 
 export const mockOrderHistory = [
   {

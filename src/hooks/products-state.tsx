@@ -16,7 +16,6 @@ export const ProductsContext = createContext<{
 
 export default function ProductsProvider({ children }: any) {
 
-    const newUser: IUser = getNullUser();
     const [products, setProducts] = useState<Product[]>([]);
 
     // Initialize products from local storage or set to empty array

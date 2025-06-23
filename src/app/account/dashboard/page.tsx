@@ -10,10 +10,7 @@ import { UserContext } from '@/hooks/user-state';
 
 export default function DashboardPage() {
   const {
-          user,
-          setUser,
-          isAuthenticated, 
-          setIsAuthenticated
+          user
   } = useContext(UserContext);
 
   
