@@ -28,8 +28,8 @@ export default function OrdersPage() {
           </TableHeader>
           <TableBody>
             {mockOrderHistory.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-medium">{order.id}</TableCell>
+              <TableRow key={order.uid}>
+                <TableCell className="font-medium">{order.uid}</TableCell>
                 <TableCell>{order.date}</TableCell>
                 <TableCell>${order.total.toFixed(2)}</TableCell>
                 <TableCell>
@@ -47,7 +47,7 @@ export default function OrdersPage() {
                 <TableCell className="text-right">
                   <Button asChild variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
                     {/* In a real app, this would link to an order details page */}
-                    <Link href={`/account/orders/${order.id}`}> 
+                    <Link href={`/account/orders/${order.uid}`}> 
                       <Eye className="mr-2 h-4 w-4" /> View
                     </Link>
                   </Button>

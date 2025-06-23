@@ -1,25 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ServiceCard from '@/components/service-card';
-import { mockServices } from '@/lib/data';
-import type { Service } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, FilterX } from 'lucide-react';
+import { ServicesContext } from '@/hooks/services-state';
 
-const serviceCategories = ['All', ...new Set(mockServices.map(s => s.category))];
-const locations = ['All', ...new Set(mockServices.map(s => s.location).filter(Boolean))] as string[];
 
 export default function ServicesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLocation, setSelectedLocation] = useState('All');
   const [sortBy, setSortBy] = useState('name-asc');
+  const { services } = useContext(ServicesContext);
 
-  const filteredServices = mockServices
+  const serviceCategories = ['All', ...new Set(services.map(s => s.category))];
+  const locations = ['All', ...new Set(services.map(s => s.location).filter(Boolean))] as string[];
+  console.log("services", services);
+
+  const filteredServices = services
     .filter(service =>
       (service.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
        service.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
@@ -112,7 +114,7 @@ export default function ServicesPage() {
       {filteredServices.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredServices.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard key={service.uid} service={service} />
           ))}
         </div>
       ) : (

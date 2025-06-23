@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { User, LogIn, UserPlus, LayoutDashboard, LogOut, ShoppingBag, MapPin } from 'lucide-react';
 import { useState, useEffect, useContext } from 'react';
-import { AppContext } from '@/hooks/user-state';
+import { UserContext } from '@/hooks/user-state';
 import { IUser } from '@/types';
-import { getUser } from '@/services/operations';
+import { getNullUser } from '@/services/operations';
 import logInWithEmail from '@/services/autentication';
 
 
@@ -28,22 +28,12 @@ function useAuth() {
           setUser,
           isAuthenticated, 
           setIsAuthenticated
-  } = useContext(AppContext);
+  } = useContext(UserContext);
 
   // Mock logout function
   const logout = () => {
 
-    const userNull: IUser = {
-      uid: "",
-      displayName: "",
-      photoURL: "",
-      location: [],
-      email: "",
-      emailVerified: false,
-      boughtProducts: [],
-      boughtServices: []
-    };
-
+    const userNull: IUser =  getNullUser();
     setIsAuthenticated(false);
     setUser(userNull);
 
@@ -60,7 +50,7 @@ export default function UserNav() {
 
   const {  logout } = useAuth();
   const [isClient, setIsClient] = useState(false);
-  const {user, isAuthenticated} = useContext(AppContext);
+  const {user, isAuthenticated} = useContext(UserContext);
 
   useEffect(() => {
     setIsClient(true);

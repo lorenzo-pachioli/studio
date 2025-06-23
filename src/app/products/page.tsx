@@ -1,19 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ProductCard from '@/components/product-card';
-import { mockProducts } from '@/lib/data';
-import type { Product } from '@/types';
+import { ProductsContext } from '@/hooks/products-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { Search, FilterX } from 'lucide-react';
 
-const categories = ['All', ...new Set(mockProducts.map(p => p.category))];
-const brands = ['All', ...new Set(mockProducts.map(p => p.brand).filter(Boolean))] as string[];
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,8 +17,13 @@ export default function ProductsPage() {
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
   const [sortBy, setSortBy] = useState('name-asc');
+  const { products } = useContext(ProductsContext);
 
-  const filteredProducts = mockProducts
+  const categories = ['All', ...new Set(products.map(p => p.category))];
+  const brands = ['All', ...new Set(products.map(p => p.brand).filter(Boolean))] as string[];
+
+
+  const filteredProducts = products
     .filter(product =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === 'All' || product.category === selectedCategory) &&
@@ -48,7 +49,7 @@ export default function ProductsPage() {
     setSortBy('name-asc');
   };
   
-  const maxPrice = Math.max(...mockProducts.map(p => p.price), 100);
+  const maxPrice = Math.max(...products.map(p => p.price), 100);
 
 
   return (

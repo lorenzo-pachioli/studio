@@ -5,15 +5,20 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/product-card';
 import ServiceCard from '@/components/service-card';
-import { mockProducts, mockServices, mockPromotions } from '@/lib/data';
+import { mockPromotions } from '@/lib/data';
 import { ArrowRight, PawPrint, CheckCircle, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AppContext } from '@/hooks/user-state';
+import { Product } from '@/types';
+import { ServicesContext } from '@/hooks/services-state';
+import { ProductsContext } from '@/hooks/products-state';
 import { useContext } from 'react';
 
 export default function HomePage() {
-  const featuredProducts = mockProducts.slice(0, 3);
-  const featuredServices = mockServices.slice(0, 3);
+  
+  const { products } = useContext(ProductsContext);
+  const { services } = useContext(ServicesContext);
+  const featuredProducts = products.slice(0, 3);
+  const featuredServices = services.slice(0, 3);
   const currentPromotion = mockPromotions[0];
 
   return (
@@ -60,8 +65,8 @@ export default function HomePage() {
           </Button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {featuredProducts.map((product:Product) => (
+            <ProductCard key={product.uid} product={product} />
           ))}
         </div>
       </section>
@@ -103,7 +108,7 @@ export default function HomePage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredServices.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard key={service.uid} service={service} />
           ))}
         </div>
       </section>

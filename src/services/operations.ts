@@ -1,7 +1,9 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {db} from "./firebase";
 import { IUser } from "@/types";
-import {collection, getDocs, getDoc, doc,  setDoc } from 'firebase/firestore/lite';
+import {collection, getDocs, getDoc, doc,  setDoc, CollectionReference, DocumentData  } from 'firebase/firestore/lite';
+
+import {  } from 'firebase/firestore/lite';
  
 
 export async function getUserColection(coll: string): Promise<any[]> {
@@ -20,14 +22,16 @@ export async function getUserColection(coll: string): Promise<any[]> {
 
 const auth = getAuth();
 
-export const getUser = (id: string): IUser =>{
+export const getNullUser = (): IUser =>{
   const newUser: IUser = {
-          uid: "1",
-          displayName: "Jhon Doe",
-          photoURL: "https://placehold.co/150x150.png",
-          location: [],
-          email: "jhon@gmail.com",
-          emailVerified: true
+        uid: "",
+        displayName: "",
+        photoURL: "",
+        location: [],
+        email: "",
+        emailVerified: false,
+        boughtProducts: [],
+        boughtServices: []
       };
       return newUser;
 }
@@ -38,7 +42,19 @@ export async function setData(coll: string, id: string, data: any){
 }
 
 export async function getDataById(coll: string, id: string){
-  const docRef = await getDoc(doc(db, coll, id));
-  const data = docRef.data();
+  const docSnap = await getDoc(doc(db, coll, id));
+  const data = docSnap.data();
   return data;
+}
+
+export async function getCollectionRef(coll: string): Promise<CollectionReference<DocumentData>> {
+  const docRef = collection(db, coll);
+  return docRef;
+}
+
+export async function getCollections(coll:string): Promise<any[]> {
+    
+  const docRef = collection(db, coll);
+  const docList = await getDocs(docRef);
+  return docList.docs.map(doc => ({ ...doc.data() }));
 }

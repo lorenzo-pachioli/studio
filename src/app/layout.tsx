@@ -1,15 +1,17 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
-import AppProvider from '@/hooks/user-state';
+import type { Metadata } from "next";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import UserProvider from "@/hooks/user-state";
+import ProductsProvider from "@/hooks/products-state";
+import ServicesProvider from "@/hooks/services-state";
 
 export const metadata: Metadata = {
-  title: 'PawsomeMart - Your Pet Store',
-  description: 'All your pet needs in one place!',
+  title: "PawsomeMart - Your Pet Store",
+  description: "All your pet needs in one place!",
   icons: {
-    icon: '/favicon.ico', // Assuming a favicon might be added later
+    icon: "/favicon.ico", // Assuming a favicon might be added later
   },
 };
 
@@ -22,18 +24,29 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        <AppProvider>
-          <Header />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
-        </AppProvider>
+        <UserProvider>
+          <ProductsProvider>
+            <ServicesProvider>
+              <Header />
+              <main className="flex-grow container mx-auto px-4 py-8">
+                {children}
+              </main>
+              <Footer />
+              <Toaster />
+            </ServicesProvider>
+          </ProductsProvider>
+        </UserProvider>
       </body>
     </html>
   );

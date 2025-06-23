@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, UserCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { AppContext } from '@/hooks/user-state';
+import { UserContext } from '@/hooks/user-state';
 
 export default function ProfilePage() {
   const { toast } = useToast();
@@ -18,7 +18,7 @@ export default function ProfilePage() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); 
-  const {user, setUser,userLocalStorage,isAuthenticated,setIsAuthenticated} = useContext(AppContext);
+  const {user, setUser,userLocalStorage,isAuthenticated,setIsAuthenticated} = useContext(UserContext);
   
   useEffect(() => {
     if (typeof window !== 'undefined' && user.email && user.displayName) {

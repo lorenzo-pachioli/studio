@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockOrderHistory, mockAddresses } from '@/lib/data';
 import { ArrowRight, ShoppingBag, MapPin, UserCircle } from 'lucide-react';
-import { AppContext } from '@/hooks/user-state';
+import { UserContext } from '@/hooks/user-state';
 
 export default function DashboardPage() {
   const {
@@ -14,7 +14,7 @@ export default function DashboardPage() {
           setUser,
           isAuthenticated, 
           setIsAuthenticated
-  } = useContext(AppContext);
+  } = useContext(UserContext);
 
   
   const recentOrder = mockOrderHistory.length > 0 ? mockOrderHistory[0] : null;

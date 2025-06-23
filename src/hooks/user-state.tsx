@@ -2,9 +2,9 @@
 
 import React, { useState, createContext  } from 'react';
 import { IUser } from "@/types";
-import { getUser } from "@/services/operations";
+import { getNullUser } from "@/services/operations";
 
-export const AppContext = createContext<{
+export const UserContext = createContext<{
   user: IUser;
   setUser: React.Dispatch<React.SetStateAction<IUser>>;
   userLocalStorage: (id?: string) => void;
@@ -12,16 +12,7 @@ export const AppContext = createContext<{
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }>(
   {
-    user: {
-      uid: "",
-      displayName: "",
-      photoURL: "",
-      location: [],
-      email: "",
-      emailVerified: false,
-      boughtProducts: [],
-      boughtServices: []
-    },
+    user:  getNullUser(),
     setUser: () => {},
     userLocalStorage: () => {},
     isAuthenticated: false,
@@ -29,9 +20,9 @@ export const AppContext = createContext<{
   }
 );
 
-export default function AppProvider({ children }: any) {
+export default function UserProvider({ children }: any) {
 
-    const newUser: IUser = getUser("1");
+    const newUser: IUser = getNullUser();
     const [user, setUser] = useState(newUser);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     
@@ -42,7 +33,7 @@ export default function AppProvider({ children }: any) {
     };
 
     return (
-        <AppContext.Provider
+        <UserContext.Provider
           value={{
               user,
               setUser,
@@ -52,6 +43,6 @@ export default function AppProvider({ children }: any) {
           }}
         >
           {children}
-        </AppContext.Provider>
+        </UserContext.Provider>
       );
     }
