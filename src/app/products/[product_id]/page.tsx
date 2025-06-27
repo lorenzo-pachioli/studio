@@ -41,7 +41,7 @@ export default function ProductPage({
             />
           </div>
           <div>
-            <section className="text-center mb-16">
+            <section className="text-lg mb-16">
               <h1 className="text-5xl font-extrabold mb-4">{product?.name}</h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
                 {product?.description}
