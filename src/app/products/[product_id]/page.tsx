@@ -2,40 +2,19 @@
 
 import Image from "next/image";
 import { ShoppingCart, Star } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ProductsContext } from "@/hooks/products-state";
 import { Button } from "@/components/ui/button";
 import { handleAddToCart } from "@/lib/utils";
-import { Product } from "@/types";
 
 export default function ProductPage({
   params,
 }: {
-  params: Promise<{ product_id: string }>;
+  params: { product_id: string };
 }) {
-  const [product, setProduct] = useState<Product | undefined>();
-  const { products } = useContext(ProductsContext);
 
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const { product_id } = await params;
-        setProduct(productById(product_id));
-
-        console.log("Product useEfect", product_id, product);
-      } catch (err) {
-        console.log("error", err);
-      }
-    };
-    getProduct();
-  }, [product]);
-
-  const productById = (productId: string): Product | undefined => {
-    return products.find((product) => {
-      console.log(product.uid, productId);
-      if (product.uid == productId) return product;
-    });
-  };
+  const { useProductById } = useContext(ProductsContext);
+  const product = useProductById(params.product_id);
 
   if (!product) {
     return (
