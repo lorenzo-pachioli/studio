@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 
 
 const firebaseConfig = {
-  apiKey: "",
+  apiKey:  process.env.APIKEY,
   authDomain: "pawsome-3ecdf.firebaseapp.com",
   projectId: "pawsome-3ecdf",
   storageBucket: "pawsome-3ecdf.firebasestorage.app",
@@ -14,12 +14,6 @@ const firebaseConfig = {
   appId: "1:975468319931:web:acf7257acf39858211459e",
   measurementId: "G-YCSVDWTRMZ"
 };
-
-
-  
-/* firebase.initializeApp(firebaseConfig);
-export const firestore = firebase.firestore();  
-export default firebase; */
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
