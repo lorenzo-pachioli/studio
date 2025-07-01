@@ -53,7 +53,7 @@ export const userAuth =  async () =>{
         uid: firebaseUser.uid,
         displayName: firebaseUser.displayName || "",
         photoURL: firebaseUser.photoURL || "",
-        location: [], 
+        addresses: [], 
         email: firebaseUser.email || "",
         emailVerified: firebaseUser.emailVerified
     };

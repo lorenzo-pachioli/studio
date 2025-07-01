@@ -51,7 +51,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             photoURL: userData.photoURL || "",
             email: userData.email || email,
             emailVerified: userData.emailVerified || false,
-            location: userData.location || [],
+            addresses: userData.addresses || [],
             boughtProducts: userData.boughtProducts || [],
             boughtServices: userData.boughtServices || [],
           };
@@ -86,7 +86,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             photoURL: userCredential.user.photoURL || "",
             email: userCredential.user.email || email,
             emailVerified: userCredential.user.emailVerified || false,
-            location: [],
+            addresses: [],
             boughtProducts: [],
             boughtServices: [],
           };

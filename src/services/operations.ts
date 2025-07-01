@@ -27,7 +27,7 @@ export const getNullUser = (): IUser =>{
         uid: "",
         displayName: "",
         photoURL: "",
-        location: [],
+        addresses: [],
         email: "",
         emailVerified: false,
         boughtProducts: [],
