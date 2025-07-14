@@ -19,8 +19,6 @@ import { IUser } from '@/types';
 import { getNullUser } from '@/services/operations';
 import logInWithEmail from '@/services/autentication';
 
-
-// Mock authentication state
 function useAuth() {
 
   const {

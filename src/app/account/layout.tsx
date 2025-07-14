@@ -1,12 +1,23 @@
+'use client'
 import AccountNav from '@/components/account-nav';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { UserContext } from '@/hooks/user-state';
+import { useContext, useEffect } from 'react';
 
 export default function AccountLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const {isAuthenticated} = useContext(UserContext);
+
+  useEffect(() => {
+    if(!isAuthenticated) {
+      window.location.href = '/login';
+    }
+  }, [isAuthenticated]);
+  
   return (
     <div className="container mx-auto py-10">
       <div className="mb-8">

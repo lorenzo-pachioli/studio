@@ -1,12 +1,18 @@
+'use client';
 import Link from 'next/link';
 import MainNav from '@/components/layout/main-nav';
 import UserNav from '@/components/auth/user-nav';
 import { PawPrintIcon } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { Icon, Search, ShoppingCart } from 'lucide-react';
+import { UserContext } from '@/hooks/user-state';
+import { useContext } from 'react';
 
 export default function Header() {
+  const {isAuthenticated} = useContext(UserContext);
+
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
@@ -17,7 +23,7 @@ export default function Header() {
           </Link>
         </div>
         
-        <div className="flex-1 flex justify-center px-4 lg:px-8 hidden md:flex">
+        <div className="flex-1 justify-center px-4 lg:px-8 hidden md:flex">
            <div className="relative w-full max-w-md">
             <Input
               type="search"
@@ -33,6 +39,11 @@ export default function Header() {
             <MainNav />
           </div>
           <UserNav />
+          {isAuthenticated ? (
+            <Link href="/cart" >
+              <ShoppingCart />
+            </Link>
+          ):(<></>)}
           <div className="md:hidden">
              <MainNav /> {/* This will render the Sheet trigger for mobile */}
           </div>

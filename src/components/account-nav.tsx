@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, User, ShoppingBag, MapPin, LogOut } from 'lucide-react';
+import { LayoutDashboard, User, ShoppingBag, MapPin, LogOut, ShoppingCart } from 'lucide-react';
 import { Button } from './ui/button';
 
 const navItems = [
@@ -17,7 +17,6 @@ const navItems = [
 const handleLogout = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('pawsomeMartAuth');
-    // Ideally, you'd redirect or use router.push here after clearing auth state
     window.location.href = '/'; // Simple redirect for mock
   }
   console.log("User logged out");

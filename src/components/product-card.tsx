@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useContext } from 'react';
+import { ShopingCartContext } from '@/hooks/shopingCart-state';
 
 interface ProductCardProps {
   product: Product;
@@ -15,9 +17,10 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
+  const{ useAddToCart } = useContext(ShopingCartContext); 
 
-  const handleAddToCart = () => {
-    // Mock add to cart functionality
+  const handleAddToCart = (product:Product, quantity: number) => {
+    useAddToCart(product, quantity);
     toast({
       title: "Added to cart!",
       description: `${product.name} has been added to your cart.`,
@@ -62,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
       </CardContent>
       <CardFooter className="p-4 border-t">
-        <Button onClick={handleAddToCart} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button onClick={() => handleAddToCart(product, 1)} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
         </Button>
       </CardFooter>

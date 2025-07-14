@@ -6,7 +6,8 @@ import Footer from "@/components/layout/footer";
 import UserProvider from "@/hooks/user-state";
 import ProductsProvider from "@/hooks/products-state";
 import ServicesProvider from "@/hooks/services-state";
-import PromotionsContext from "@/hooks/promotions-state";
+import ShopingCartProvider from "@/hooks/shopingCart-state";
+import PromotionsProvider from "@/hooks/promotions-state";
 
 export const metadata: Metadata = {
   title: "PawsomeMart - Your Pet Store",
@@ -39,14 +40,16 @@ export default function RootLayout({
         <UserProvider>
           <ProductsProvider>
             <ServicesProvider>
-              <PromotionsContext>
-                <Header />
-                <main className="flex-grow container mx-auto px-4 py-8">
-                  {children}
-                </main>
-                <Footer />
-                <Toaster />
-              </PromotionsContext>
+              <PromotionsProvider>
+                <ShopingCartProvider>
+                  <Header />
+                  <main className="flex-grow container mx-auto px-4 py-8">
+                    {children}
+                  </main>
+                  <Footer />
+                  <Toaster />
+                </ShopingCartProvider>
+              </PromotionsProvider>
             </ServicesProvider>
           </ProductsProvider>
         </UserProvider>
