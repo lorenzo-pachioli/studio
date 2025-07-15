@@ -16,7 +16,6 @@ export const ProductsContext = createContext<{
 
 export default function ProductsProvider({ children }: any) {
   const [products, setProducts] = useState<Product[]>([]);
-  const [productById, setProductById] = useState<Product | undefined>();
 
   // Initialize products from local storage or set to empty array
   React.useEffect(() => {
@@ -35,8 +34,7 @@ export default function ProductsProvider({ children }: any) {
     const product = products.find((product) => {
       if (product.uid == id) return product;
     });
-    setProductById(product);
-    return productById;
+    return product;
   };
 
   return (

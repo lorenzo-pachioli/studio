@@ -7,9 +7,12 @@ import Link from 'next/link';
 import { useContext, useEffect } from 'react';
 import { ShopingCartContext } from '@/hooks/shopingCart-state';
 import { UserContext } from '@/hooks/user-state';
+import { ProductsContext } from '@/hooks/products-state';
+import { ICartItem } from '@/types';
 
 export default function CartPage() {
-  const { cartList, setCartItems } = useContext(ShopingCartContext);
+  const { cartList, useAddToCart, useRemoveCartItem } = useContext(ShopingCartContext);
+  const { useProductById } = useContext(ProductsContext);
   const {isAuthenticated} = useContext(UserContext);
 
   useEffect(() => {
@@ -22,16 +25,13 @@ export default function CartPage() {
     }
   }, [isAuthenticated]);
 
-  const changeQuantity = (itemId: string, newQuantity: number) => {
- 
-    cartList.map(item => {
-      if (item.uid === itemId) {
-        item.quantity = newQuantity;
-      }
-      return item;
-    });
-    setCartItems([...cartList]);
+  const changeQuantity = (order: ICartItem, quantity: number, operation: "add"|"remove") => {
+
+    const product = useProductById(order.product_id);
+    if(operation === "add" && product) useAddToCart(product, quantity);
+    if(operation === "remove") useRemoveCartItem(order.uid, quantity);
   };
+  
 
   return (
     <div className="space-y-6">
@@ -54,11 +54,11 @@ export default function CartPage() {
               <TableRow key={order.uid}>
                 <TableCell className="font-medium">{order.product}</TableCell>
                 <TableCell className="text-center">
-                    <Button variant="outline" onClick={() => changeQuantity(order.uid, order.quantity - 1)} size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
+                    <Button variant="outline" onClick={() => changeQuantity(order, 1, "remove")} size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
                     <span>-</span>
                     </Button>
                     {order.quantity}
-                    <Button variant="outline" onClick={() => changeQuantity(order.uid, order.quantity + 1)}  size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
+                    <Button variant="outline" onClick={() => changeQuantity(order, 1, "add")}  size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
                     <span>+</span>
                     </Button>
                   </TableCell>

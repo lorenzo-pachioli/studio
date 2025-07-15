@@ -10,13 +10,13 @@ export const ShopingCartContext = createContext<{
   setCartItems: React.Dispatch<React.SetStateAction<ICartItem[]>>;
   useCartItemById: (uid: string) => ICartItem | undefined;
   useAddToCart: (product: Product, quantity?: number) => void;
-  filterEmptyCartItems: () => void;
+  useRemoveCartItem: (uid: string, quantity: number) => void;
 }>({
   cartList: [],
   setCartItems: () => {},
   useCartItemById: () => undefined,
   useAddToCart: () => {},
-  filterEmptyCartItems: () => {},
+  useRemoveCartItem: () => {},
 });
 
 export default function ShopingCartProvider({ children }: any) {
@@ -35,16 +35,20 @@ export default function ShopingCartProvider({ children }: any) {
     return cartItemById;
   };
 
-  const filterEmptyCartItems = () => {
-    const filteredCartItems = cartList.filter((item) => item.quantity > 0);
-    setCartItems(filteredCartItems);
-  };
+  const useRemoveCartItem = (uid: string, quantity: number) => {
+    const updatedCartList = cartList.map((item) => {
+      if (item.uid === uid) {
+        item.quantity -= quantity;
+        console.log("Removing item:", item);
+      }
+      return item;
+    }).filter(item => item.quantity > 0); // Filter out items with zero quantity
+    setCartItems(updatedCartList);
+  }
 
   const useAddToCart = (product: Product, quantity: number = 1) => {
     const existingCartItem = cartList.find((item) => item.product_id === product.uid);
-    if(quantity <= 0) {
-      filterEmptyCartItems();
-    } else if (existingCartItem) { 
+    if (existingCartItem) { 
       // If the item already exists in the cart, update the quantity
       existingCartItem.quantity += quantity;
       setCartItems([...cartList]);
@@ -70,7 +74,7 @@ export default function ShopingCartProvider({ children }: any) {
         setCartItems,
         useCartItemById,
         useAddToCart,
-        filterEmptyCartItems
+        useRemoveCartItem
       }}
     >
       {children}
