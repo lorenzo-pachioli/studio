@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   env: {
-    APIKEY: 'AIzaSyCfaiX7pybFtIzPlatDVDyvXMed4XiG8zM',
+    APIKEY: process.env.API_KEY,
+    SECRET: process.env.SECRET,
   },
   eslint: {
     ignoreDuringBuilds: true,

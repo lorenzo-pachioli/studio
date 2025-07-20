@@ -19,11 +19,11 @@ export default function CartPage() {
     console.log("cart:", cartList);
   }, [cartList]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if(!isAuthenticated) {
       window.location.href = '/login';
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated]); */
 
   const changeQuantity = (order: ICartItem, quantity: number, operation: "add"|"remove") => {
 

@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +9,7 @@ import ProductsProvider from "@/hooks/products-state";
 import ServicesProvider from "@/hooks/services-state";
 import ShopingCartProvider from "@/hooks/shopingCart-state";
 import PromotionsProvider from "@/hooks/promotions-state";
+import { decrypt, verifySession } from "@/services/statelessSession";
 
 export const metadata: Metadata = {
   title: "PawsomeMart - Your Pet Store",
@@ -17,11 +19,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+  const cookie = (await verifySession()).cookie;
+  const session = await decrypt(cookie);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -37,7 +43,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        <UserProvider>
+        <UserProvider session={session ? session : { uid: '', expiresAt: new Date(), token: '' }}>
           <ProductsProvider>
             <ServicesProvider>
               <PromotionsProvider>

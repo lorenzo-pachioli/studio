@@ -1,7 +1,7 @@
 'use client';
 import "firebase/firestore";
-import { signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword  } from "firebase/auth";
-import {setData, getDataById} from "./operations";
+import { signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { setData, getDataById } from "./operations";
 import { IUser } from "@/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
@@ -9,55 +9,54 @@ import { auth } from "@/services/firebase";
 const provider = new GoogleAuthProvider();
 
 
-const addUserToFirestore = async (user:IUser) => {
-    
-    const {uid} = user;
-    const userExist = await getDataById("Users", uid);
-    if (!userExist) {
-      await setData("Users", uid, user);
-    }
+const addUserToFirestore = async (user: IUser) => {
+
+  const { uid } = user;
+  const userExist = await getDataById("Users", uid);
+  if (!userExist) {
+    await setData("Users", uid, user);
+  }
 };
 
-export const createUser = async (email:string, password:string) => {
-  
+export const createUser = async (email: string, password: string) => {
+
 
   createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    return userCredential.user;
-  })
-  .catch((error) => {
-    return error;
-  });
+    .then((userCredential) => {
+      return userCredential.user;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
-export default async function logInWithEmail (email: string, password: string) {
+export default async function logInWithEmail(email: string, password: string) {
+
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log("User logged in:", userCredential.user.displayName);
-    const user = userCredential.user;
-    return user;
+    return userCredential.user;
   } catch (error) {
     console.error("Error logging in with email:", error);
     throw error;
   }
 }
 
-export const userAuth =  async () =>{
+export const userAuth = async () => {
 
   try {
     const userCredentials = await signInWithPopup(auth, provider);
 
-      const firebaseUser = userCredentials.user;
-      const userToAdd: IUser = {
-        uid: firebaseUser.uid,
-        displayName: firebaseUser.displayName || "",
-        photoURL: firebaseUser.photoURL || "",
-        addresses: [], 
-        email: firebaseUser.email || "",
-        emailVerified: firebaseUser.emailVerified
+    const firebaseUser = userCredentials.user;
+    const userToAdd: IUser = {
+      uid: firebaseUser.uid,
+      displayName: firebaseUser.displayName || "",
+      photoURL: firebaseUser.photoURL || "",
+      addresses: [],
+      email: firebaseUser.email || "",
+      emailVerified: firebaseUser.emailVerified
     };
-      
+
     addUserToFirestore(userToAdd);
     return userCredentials.user;
   } catch (err: unknown) {
@@ -68,7 +67,7 @@ export const userAuth =  async () =>{
     }
   }
 };
-    
+
 export const loggedOut = async () => {
-   signOut(auth);
+  signOut(auth);
 };

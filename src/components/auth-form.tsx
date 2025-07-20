@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, FormEvent, useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, FormEvent, useContext, useEffect, use } from "react";
+import { redirect, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,11 +16,12 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { PawPrintIcon } from "@/components/icons";
 import { Loader2 } from "lucide-react";
-import logInWithEmail, { userAuth } from "@/services/autentication";
+import logInWithEmail from "@/services/autentication";
 import { auth } from "@/services/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { UserContext } from "@/hooks/user-state";
-import { getDataById, setData } from "@/services/operations";
+import { getUserById, setData } from "@/services/operations";
+import { createSession } from "@/services/statelessSession";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -33,8 +34,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState(""); // For registration
-  const { setUser, userLocalStorage, setIsAuthenticated } =
-    useContext(UserContext);
+  const { login, logout, isAuthenticated } = useContext(UserContext);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      redirect("/account/dashboard");
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,26 +49,17 @@ export default function AuthForm({ mode }: AuthFormProps) {
     if (mode === "login") {
       try {
         const userCredential = await logInWithEmail(email, password);
-        const userData = await getDataById("users", userCredential.uid);
-        if (userData) {
-          const newUser = {
-            uid: userData.uid,
-            displayName: userData.displayName || name, // Use provided name if available
-            photoURL: userData.photoURL || "",
-            email: userData.email || email,
-            emailVerified: userData.emailVerified || false,
-            addresses: userData.addresses || [],
-            boughtProducts: userData.boughtProducts || [],
-            boughtServices: userData.boughtServices || [],
-          };
-          userLocalStorage(userCredential.uid);
-          console.log("AppProvider user (auth-form)", newUser);
-          setUser(newUser);
-          setIsAuthenticated(true);
-          toast({ title: "Login Successful!", description: "Welcome back!" });
-          router.push("/account/dashboard");
-        }
+        if (!userCredential) throw new Error("Login failed");
+
+        await createSession(userCredential.uid);
+        const userData = await getUserById(userCredential.uid);
+        if (!userData) throw new Error("User data not found");
+
+        login(userData);
+        toast({ title: "Login Successful!", description: "Welcome back!" });
+        router.push("/account/dashboard");
       } catch (error) {
+        logout();
         console.error("Login failed", error);
         toast({
           variant: "destructive",
@@ -93,17 +90,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
           // Save the new user data to the database
           await setData("users", userData.uid, userData);
-
-          // Update local state and local storage
-          userLocalStorage(userData.uid);
-          setUser(userData);
-          setIsAuthenticated(true);
+          await createSession(userData.uid);
+          login(userData);
           toast({
             title: "Registration Successful!",
             description: "Welcome to PawsomeMart!",
           });
           router.push("/account/dashboard");
         } catch (error) {
+          logout();
           console.error("Registration failed", error);
           toast({
             variant: "destructive",

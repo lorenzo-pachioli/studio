@@ -1,3 +1,5 @@
+import { JWTPayload } from "jose";
+
 export interface IUser {
   uid: string;
   displayName: string | null;
@@ -63,3 +65,12 @@ export interface ICartItem {
   price: number; // Price of the product
   imageUrl: string; // URL of the product image
 };
+
+export interface SessionPayload extends JWTPayload {
+  uid: string
+  expiresAt: Date;
+}
+export interface IverifySessionPayload {
+  isAuth: boolean;
+  cookie?: string;
+}
