@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   env: {
     APIKEY: process.env.API_KEY,
     SECRET: process.env.SECRET,
+    MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN,
   },
   eslint: {
     ignoreDuringBuilds: true,
