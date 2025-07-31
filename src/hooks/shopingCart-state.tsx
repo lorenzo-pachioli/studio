@@ -20,7 +20,7 @@ export const ShopingCartContext = createContext<{
 });
 
 export default function ShopingCartProvider({ children }: any) {
-  const [ cartList, setCartItems ] = useState(mockCartItems);
+  const [ cartList, setCartItems ] = useState<ICartItem[]>(mockCartItems);
   const [cartItemById, setCartItemById] = useState<ICartItem | undefined>();
 
   useEffect(() => {
@@ -61,7 +61,6 @@ export default function ShopingCartProvider({ children }: any) {
         product: product.name,
         quantity,
         price: product.price,
-        imageUrl: product.imageUrl,
       };
       setCartItems([...cartList, newCartItem]);
     }

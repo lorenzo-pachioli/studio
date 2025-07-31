@@ -1,28 +1,12 @@
  
  export const mockCartItems = [
   {
-    uid: 'ITEM001',
-    product_id: '1',
-    product: 'Premium Dog Kibble',
-    quantity: 2,
-    price: 29.99,
-    imageUrl: '/images/dog-kibble.jpg',
-  },
-  {
     uid: 'ITEM002',
     product_id: '2',
     product: 'Interactive Cat Toy',
     quantity: 1,
     price: 12.50,
     imageUrl: '/images/cat-toy.jpg',
-  },
-  {
-    uid: 'ITEM003',
-    product_id: '3',
-    product: 'Cozy Pet Bed',
-    quantity: 1,
-    price: 45.00,
-    imageUrl: '/images/pet-bed.jpg',
   }
  ];
 

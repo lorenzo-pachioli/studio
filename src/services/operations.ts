@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { IUser } from "@/types";
+import { ICartItem, IOrders, IUser } from "@/types";
 import { collection, getDocs, getDoc, doc, setDoc, CollectionReference, DocumentData } from 'firebase/firestore/lite';
 
 import { } from 'firebase/firestore/lite';
@@ -75,4 +75,16 @@ export async function getUserById(id: string): Promise<IUser> {
   } else {
     return getNullUser();
   }
+}
+
+export async function getCartItemById(id: string): Promise<ICartItem> {
+  const docSnap = await getDoc(doc(db, "cart_items", id));
+  const data = docSnap.data() as ICartItem;
+  return data;
+}
+
+export async function getOrderById(id: string): Promise<IOrders | null> {
+  const docSnap = await getDoc(doc(db, "Orders", id));
+  const data = docSnap.data() as IOrders;
+  return data ? data : null;
 }

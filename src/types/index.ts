@@ -57,13 +57,22 @@ export interface Promotion {
   dataAiHint?: string;
 }
 
+export interface IOrders {
+  uid: string; // Unique identifier for the order
+  user_id: string; // ID of the user who placed the order
+  items: string[]; // List of items in the order
+  quantity: number; // Total quantity of items in the order
+  createdAt: Date; // Timestamp of when the order was created
+  total: number; // Total price of the order
+  status: "pending" | "completed" | "canceled"; // Order status
+}
+
 export interface ICartItem {
   uid: string; // Unique identifier for the cart item
   product_id: string; // ID of the product
   product: string; // Name of the product
   quantity: number; // Quantity of the product in the cart
   price: number; // Price of the product
-  imageUrl: string; // URL of the product image
 };
 
 export interface SessionPayload extends JWTPayload {
