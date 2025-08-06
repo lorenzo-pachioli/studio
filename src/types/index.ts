@@ -62,9 +62,10 @@ export interface IOrders {
   user_id: string; // ID of the user who placed the order
   items: string[]; // List of items in the order
   quantity: number; // Total quantity of items in the order
-  createdAt: Date; // Timestamp of when the order was created
+  created_at: Date; // Timestamp of when the order was created
   total: number; // Total price of the order
   status: "pending" | "completed" | "canceled"; // Order status
+  meli_id?: number; // MercadoPago payment ID
 }
 
 export interface ICartItem {

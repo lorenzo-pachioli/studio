@@ -1,7 +1,9 @@
+import "server-only";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import { ICartItem, IOrders, Product } from "@/types";
 import { getCartItemById, getOrderById, setData } from "@/services/operations";
 import { decrypt, verifySession } from "./statelessSession";
+import { getFirestore } from "firebase-admin/firestore";
 
 interface Message {
   id: number;
@@ -20,23 +22,30 @@ console.log("Mercado Pago Config initialized:", !!process.env.MP_ACCESS_TOKEN);
 export const addSuccessOperation = async (message: Message): Promise<void> => {
 
   try {
-    console.log("Adding message", message);
-    const exist = await getOrderById(message.id.toString());
+    const firestore = getFirestore();
+    const exist = await firestore.collection("Orders").doc(message.id.toString()).get();
+    console.log("Order data:", message);
     // Si ya existe un mensaje con ese id, lanzamos un error
-    if (exist === null) {
-      throw new Error("Message already added");
+    if (exist.exists) {
+      throw new Error("Order already added");
     }
+
     const newOrder: IOrders = {
-      ...message.order,
-      uid: message.id.toString()
+      uid: message.order.uid,
+      user_id: message.order.user_id,
+      items: message.order.items,
+      quantity: message.order.quantity,
+      created_at: new Date(message.order.created_at || new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"})),
+      total: message.order.total,
+      status: "completed", 
+      meli_id: message.id
     };
 
     // Agregamos el nuevo mensaje
-    const response = await setData("Orders", message.id.toString(), newOrder);
-    return response;
-
+    const response = await firestore.collection("Orders").doc(String(newOrder.uid)).set(newOrder);
+    console.log("Order added successfully:", response);
   } catch (error) {
-    console.error("Error adding message:", error);
+    console.error("Error adding order:", error);
   }
 }
 
@@ -47,13 +56,17 @@ export const submitOrder = async (order: ICartItem[]) => {
       throw new Error("User is not authenticated");
     }
     const user_id = await decrypt(session.cookie)
+    console.log("Order details:", order);
+    console.log("User ID from session:", user_id);
+
+
     
     const newOrder = {
       uid: String(crypto.randomUUID()),
       user_id: user_id?.uid,
-      items: order.map(item => item.uid),
+      items: order.map(item => item.product_id),
       quantity: order.reduce((total, item) => total + item.quantity, 0),
-      createdAt: new Date(),
+      created_at: new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"})),
       status: "pending",
       total: order.reduce((total, item) => total + item.price * item.quantity, 0),
     };
