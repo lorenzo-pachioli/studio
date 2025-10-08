@@ -1,13 +1,6 @@
  
  export const mockCartItems = [
-  {
-    uid: 'ITEM002',
-    product_id: '2',
-    product: 'Interactive Cat Toy',
-    quantity: 1,
-    price: 12.50,
-    imageUrl: '/images/cat-toy.jpg',
-  }
+
  ];
 
 export const mockOrderHistory = [

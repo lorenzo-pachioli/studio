@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, useContext } from "react";
 import { ICartItem, Product } from "@/types";
 import { mockCartItems } from "@/lib/data";
-import { log } from "console";
+import { UserContext } from "./user-state";
+import { updateUserCart } from "@/services/operations";
 
 export const ShopingCartContext = createContext<{
   cartList: ICartItem[];
@@ -20,49 +21,58 @@ export const ShopingCartContext = createContext<{
 });
 
 export default function ShopingCartProvider({ children }: any) {
+  const { user } = useContext(UserContext);
   const [ cartList, setCartItems ] = useState<ICartItem[]>(mockCartItems);
   const [cartItemById, setCartItemById] = useState<ICartItem | undefined>();
 
   useEffect(() => {
+    function initCartValue() {
+      if (user && user.openCart) {
+        setCartItems(user.openCart);
+      }
+    }
+    initCartValue();
     console.log("cart:", cartList);
-  }, [cartList]);
+  }, [user]);
 
   const useCartItemById = (uid: string): ICartItem|undefined => {
     const cartItem = cartList.find((cart) => {
-      if (cart.uid == uid) return cart;
+      if (cart.product_id == uid) return cart;
     });
     setCartItemById(cartItem);
     return cartItemById;
   };
 
-  const useRemoveCartItem = (uid: string, quantity: number) => {
+  const useRemoveCartItem = async (uid: string, quantity: number) => {
     const updatedCartList = cartList.map((item) => {
-      if (item.uid === uid) {
+      if (item.product_id === uid) {
         item.quantity -= quantity;
         console.log("Removing item:", item);
       }
       return item;
     }).filter(item => item.quantity > 0); // Filter out items with zero quantity
     setCartItems(updatedCartList);
+    await updateUserCart(user, updatedCartList);
   }
 
-  const useAddToCart = (product: Product, quantity: number = 1) => {
+  const useAddToCart = async (product: Product, quantity: number = 1) => {
     const existingCartItem = cartList.find((item) => item.product_id === product.uid);
     if (existingCartItem) { 
       // If the item already exists in the cart, update the quantity
       existingCartItem.quantity += quantity;
       setCartItems([...cartList]);
+      await updateUserCart(user, [...cartList]);
     }
     else {
       // If the item does not exist, add it to the cart
       const newCartItem: ICartItem = {
-        uid: crypto.randomUUID(),
         product_id: product.uid,
         product: product.name,
         quantity,
         price: product.price,
       };
       setCartItems([...cartList, newCartItem]);
+      await updateUserCart(user, [...cartList, newCartItem]);
     }
   }
 

@@ -23,11 +23,10 @@ export const addSuccessOperation = async (message: Message): Promise<void> => {
 
   try {
     const firestore = getFirestore();
-    const exist = await firestore.collection("Orders").doc(message.id.toString()).get();
-    console.log("Order data:", message);
-    // Si ya existe un mensaje con ese id, lanzamos un error
-    if (exist.exists) {
-      throw new Error("Order already added");
+    const orderExist = await firestore.collection("Orders").doc(message.id.toString()).get();
+    const userExist = await firestore.collection("users").doc(message.order.user_id.toString()).get();
+    if (orderExist.exists || !userExist.exists) {
+      return;
     }
 
     const newOrder: IOrders = {
@@ -43,6 +42,8 @@ export const addSuccessOperation = async (message: Message): Promise<void> => {
 
     // Agregamos el nuevo mensaje
     const response = await firestore.collection("Orders").doc(String(newOrder.uid)).set(newOrder);
+    const userData = userExist.data();
+    await firestore.collection("users").doc(String(newOrder.user_id)).set({ openCart: [], boughtProducts: [...(userData?.boughtProducts || []), newOrder.uid] }, { merge: true });
     console.log("Order added successfully:", response);
   } catch (error) {
     console.error("Error adding order:", error);
@@ -55,16 +56,12 @@ export const submitOrder = async (order: ICartItem[]) => {
     if (!session.isAuth) {
       throw new Error("User is not authenticated");
     }
-    const user_id = await decrypt(session.cookie)
-    console.log("Order details:", order);
-    console.log("User ID from session:", user_id);
+    const user_id = await decrypt(session.cookie);
 
-
-    
     const newOrder = {
       uid: String(crypto.randomUUID()),
       user_id: user_id?.uid,
-      items: order.map(item => item.product_id),
+      items: order,
       quantity: order.reduce((total, item) => total + item.quantity, 0),
       created_at: new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"})),
       status: "pending",

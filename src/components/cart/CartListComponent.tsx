@@ -17,7 +17,7 @@ export default function CartListComponent({handleCheckout}: { handleCheckout: (c
 
     const product = useProductById(cartItem.product_id);
     if(operation === "add" && product) useAddToCart(product, quantity);
-    if(operation === "remove") useRemoveCartItem(cartItem.uid, quantity);
+    if(operation === "remove") useRemoveCartItem(cartItem.product_id, quantity);
   };
   
   return (
@@ -38,7 +38,7 @@ export default function CartListComponent({handleCheckout}: { handleCheckout: (c
           </TableHeader>
           <TableBody>
             {cartList.map((order) => (
-              <TableRow key={order.uid}>
+              <TableRow key={order.product_id}>
                 <TableCell className="font-medium">{order.product}</TableCell>
                 <TableCell className="text-center">
                     <Button variant="outline" onClick={() => changeQuantity(order, 1, "remove")} size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">

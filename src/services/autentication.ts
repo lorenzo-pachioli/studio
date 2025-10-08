@@ -5,16 +5,25 @@ import { setData, getDataById } from "./operations";
 import { IUser } from "@/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
+import { decrypt, verifySession } from "./statelessSession";
 
 const provider = new GoogleAuthProvider();
 
 
 const addUserToFirestore = async (user: IUser) => {
 
-  const { uid } = user;
-  const userExist = await getDataById("Users", uid);
+  const session = await verifySession();
+  if (!session.isAuth) {
+    return null;
+  }
+  const cookie = await decrypt(session.cookie);
+  if (!cookie || !cookie.uid) {
+    return null;
+  }
+
+  const userExist = await getDataById("Users", cookie.uid);
   if (!userExist) {
-    await setData("Users", uid, user);
+    await setData("Users", cookie.uid, user);
   }
 };
 
@@ -49,12 +58,14 @@ export const userAuth = async () => {
 
     const firebaseUser = userCredentials.user;
     const userToAdd: IUser = {
-      uid: firebaseUser.uid,
       displayName: firebaseUser.displayName || "",
       photoURL: firebaseUser.photoURL || "",
       addresses: [],
       email: firebaseUser.email || "",
-      emailVerified: firebaseUser.emailVerified
+      emailVerified: firebaseUser.emailVerified || false,
+      boughtProducts: [],
+      boughtServices: [],
+      openCart: []
     };
 
     addUserToFirestore(userToAdd);

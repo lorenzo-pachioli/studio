@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'localhost:3000',
+        'sxxrjsh6-3000.brs.devtunnels.ms',
+        'https://sxxrjsh6-3000.brs.devtunnels.ms'
+      ],
+    },
+  },
   images: {
     remotePatterns: [
       {

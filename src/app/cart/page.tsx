@@ -1,5 +1,4 @@
 
-import api from '@/api';
 import CartListComponent from '@/components/cart/CartListComponent';
 import { submitOrder } from '@/services/mercadoPago';
 import { redirect } from 'next/navigation';
