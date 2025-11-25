@@ -62,7 +62,7 @@ export default function ProductPage({
           </section>
           <h2 className="text-3xl font-bold mb-6">{product.brand}</h2>
           <p className="text-lg text-foreground/90 mb-4">{product.category}</p>
-          {product.rating && (
+          {/* {product.rating && (
             <div className="flex items-center mb-2">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -78,7 +78,7 @@ export default function ProductPage({
                 ({product.rating.toFixed(1)})
               </span>
             </div>
-          )}
+          )} */}
           <Button
             variant="outline"
             onClick={() => setQuantity(quantity - 1)}

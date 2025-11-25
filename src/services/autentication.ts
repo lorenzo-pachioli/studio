@@ -5,7 +5,7 @@ import { setData, getDataById } from "./operations";
 import { IUser } from "@/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
-import { decrypt, verifySession } from "./statelessSession";
+import { decrypt, deleteSession, verifySession } from "./statelessSession";
 
 const provider = new GoogleAuthProvider();
 
@@ -80,5 +80,6 @@ export const userAuth = async () => {
 };
 
 export const loggedOut = async () => {
+  deleteSession();
   signOut(auth);
 };
