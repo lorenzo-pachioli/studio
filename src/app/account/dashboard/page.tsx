@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { mockOrderHistory, mockAddresses } from '@/lib/data';
+import { mockOrderHistory } from '@/lib/data';
 import { ArrowRight, ShoppingBag, MapPin, UserCircle } from 'lucide-react';
 import { UserContext } from '@/hooks/user-state';
 
@@ -15,7 +15,7 @@ export default function DashboardPage() {
 
   
   const recentOrder = mockOrderHistory.length > 0 ? mockOrderHistory[0] : null;
-  const defaultAddress = mockAddresses.find(addr => addr.isDefault);
+  const defaultAddress = user.addresses[0];
 
   return (
     <div className="space-y-8">

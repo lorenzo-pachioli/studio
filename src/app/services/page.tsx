@@ -19,12 +19,11 @@ export default function ServicesPage() {
 
   const serviceCategories = ['All', ...new Set(services.map(s => s.category))];
   const locations = ['All', ...new Set(services.map(s => s.location).filter(Boolean))] as string[];
-  console.log("services", services);
 
   const filteredServices = services
     .filter(service =>
-      (service.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-       service.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (selectedCategory === 'All' || service.category === selectedCategory) &&
       (selectedLocation === 'All' || service.location === selectedLocation)
     )
@@ -36,7 +35,7 @@ export default function ServicesPage() {
         default: return 0;
       }
     });
-  
+
   const resetFilters = () => {
     setSearchTerm('');
     setSelectedCategory('All');
@@ -47,12 +46,12 @@ export default function ServicesPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">Pet Care Services</h1>
-      
+
       <div className="mb-8 p-6 bg-card rounded-xl shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
           <div>
             <Label htmlFor="search-service" className="text-sm font-medium">Search Service</Label>
-             <div className="relative">
+            <div className="relative">
               <Input
                 id="search-service"
                 type="text"
@@ -103,11 +102,11 @@ export default function ServicesPage() {
               </SelectContent>
             </Select>
           </div>
-           <div className="lg:col-start-4">
-             <Button onClick={resetFilters} variant="outline" className="w-full">
+          <div className="lg:col-start-4">
+            <Button onClick={resetFilters} variant="outline" className="w-full">
               <FilterX className="mr-2 h-4 w-4" /> Reset Filters
             </Button>
-           </div>
+          </div>
         </div>
       </div>
 
@@ -118,7 +117,7 @@ export default function ServicesPage() {
           ))}
         </div>
       ) : (
-         <div className="text-center py-12">
+        <div className="text-center py-12">
           <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">No Services Found</h3>
           <p className="text-muted-foreground">Try adjusting your filters or search terms.</p>

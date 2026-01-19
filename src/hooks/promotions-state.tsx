@@ -9,24 +9,11 @@ export const PromotionsContext = createContext<{
   setPromotions: React.Dispatch<React.SetStateAction<Promotion[]>>;
 }>({
   promotions: [],
-  setPromotions: () => {},
+  setPromotions: () => { },
 });
 
-export default function PromotionsProvider({ children }: any) {
-  const [promotions, setPromotions] = useState<Promotion[]>([]);
-
-  // Initialize promotions from local storage or set to empty array
-  React.useEffect(() => {
-    const fetchPromotions = async () => {
-      try {
-        const promotionsList = await getCollections("promotions");
-        setPromotions(promotionsList);
-      } catch (error) {
-        console.error("Error initializing promotions:", error);
-      }
-    };
-    fetchPromotions();
-  }, []);
+export default function PromotionsProvider({ children, initialPromotitons }: any) {
+  const [promotions, setPromotions] = useState<Promotion[]>(initialPromotitons);
 
   return (
     <PromotionsContext.Provider

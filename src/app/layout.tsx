@@ -10,6 +10,10 @@ import ServicesProvider from "@/hooks/services-state";
 import ShopingCartProvider from "@/hooks/shopingCart-state";
 import PromotionsProvider from "@/hooks/promotions-state";
 import { decrypt, verifySession } from "@/services/statelessSession";
+import { Product, Promotion, Service } from "@/types";
+import { fetchProducts, fetchPromotions, fetchServices } from "@/lib/fetchFunctions";
+
+
 
 export const metadata: Metadata = {
   title: "PawsomeMart - Your Pet Store",
@@ -24,9 +28,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   const cookie = (await verifySession()).cookie;
   const session = await decrypt(cookie);
+  const products = await fetchProducts();
+  const promotions = await fetchPromotions();
+  const services = await fetchServices();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -44,12 +51,12 @@ export default async function RootLayout({
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
         <UserProvider session={session ? session : { uid: '', expiresAt: new Date(), token: '' }}>
-          <ProductsProvider>
-            <ServicesProvider>
-              <PromotionsProvider>
+          <ProductsProvider initialProducts={products || [] as Product[]}>
+            <ServicesProvider initialServices={services || [] as Service[]}>
+              <PromotionsProvider initialPromotitons={promotions || [] as Promotion[]}>
                 <ShopingCartProvider>
                   <Header />
-                  <main className="flex-grow container mx-auto px-4 py-8">
+                  <main className="flex-grow container mx-auto px-2 md:px-4 py-8">
                     {children}
                   </main>
                   <Footer />

@@ -1,30 +1,68 @@
-'use client';
+"use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { ShoppingBag } from 'lucide-react';
-import Link from 'next/link';
-import { useContext } from 'react';
-import { ShopingCartContext } from '@/hooks/shopingCart-state';
-import { ProductsContext } from '@/hooks/products-state';
-import { ICartItem } from '@/types';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { useContext } from "react";
+import { ShopingCartContext } from "@/hooks/shopingCart-state";
+import { ProductsContext } from "@/hooks/products-state";
+import { ICartItem } from "@/types";
+import { toast, useToast } from "@/hooks/use-toast";
 
-export default function CartListComponent({handleCheckout}: { handleCheckout: (cartList: ICartItem[]) => void }) {
-  const { cartList, useAddToCart, useRemoveCartItem } = useContext(ShopingCartContext);
+export default function CartListComponent({
+  handleCheckout,
+}: {
+  handleCheckout: (cartList: ICartItem[]) => Promise<void>;
+}) {
+  const { cartList, useAddToCart, useRemoveCartItem } =
+    useContext(ShopingCartContext);
   const { useProductById } = useContext(ProductsContext);
+  const { toast } = useToast();
 
-  const changeQuantity = (cartItem: ICartItem, quantity: number, operation: "add"|"remove") => {
 
+  const changeQuantity = (
+    cartItem: ICartItem,
+    quantity: number,
+    operation: "add" | "remove"
+  ) => {
     const product = useProductById(cartItem.product_id);
-    if(operation === "add" && product) useAddToCart(product, quantity);
-    if(operation === "remove") useRemoveCartItem(cartItem.uid, quantity);
+    if (operation === "add" && product) useAddToCart(product, quantity);
+    if (operation === "remove")
+      useRemoveCartItem(cartItem.product_id, quantity);
   };
-  
+
+  const handleCheckoutProcess = async () => {
+    toast({
+      variant: "destructive",
+      title: "Disabled",
+      description: "This feature is disabled due to be a test version.",
+    });
+    /*  try {
+       await handleCheckout(cartList);
+     } catch (error) {
+       toast({
+         variant: "destructive",
+         title: "Checkout Error",
+         description: "There was a problem processing your request. Please try again.",
+       }); 
+     }*/
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-3xl font-semibold tracking-tight">Shoping cart</h2>
-        <p className="text-muted-foreground">Check the items you added to your cart and finish the purchase</p>
+        <p className="text-muted-foreground">
+          Check the items you added to your cart and finish the purchase
+        </p>
       </div>
 
       {cartList.length > 0 ? (
@@ -38,30 +76,47 @@ export default function CartListComponent({handleCheckout}: { handleCheckout: (c
           </TableHeader>
           <TableBody>
             {cartList.map((order) => (
-              <TableRow key={order.uid}>
+              <TableRow key={order.product_id}>
                 <TableCell className="font-medium">{order.product}</TableCell>
                 <TableCell className="text-center">
-                    <Button variant="outline" onClick={() => changeQuantity(order, 1, "remove")} size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
+                  <Button
+                    variant="outline"
+                    onClick={() => changeQuantity(order, 1, "remove")}
+                    size="sm"
+                    className="hover:bg-primary/10 hover:text-primary border-primary/50"
+                  >
                     <span>-</span>
-                    </Button>
-                    {order.quantity}
-                    <Button variant="outline" onClick={() => changeQuantity(order, 1, "add")}  size="sm" className="hover:bg-primary/10 hover:text-primary border-primary/50">
+                  </Button>
+                  {order.quantity}
+                  <Button
+                    variant="outline"
+                    onClick={() => changeQuantity(order, 1, "add")}
+                    size="sm"
+                    className="hover:bg-primary/10 hover:text-primary border-primary/50"
+                  >
                     <span>+</span>
-                    </Button>
-                  </TableCell>
-                  <TableCell className="text-center">${order.price.toFixed(2)}</TableCell>
+                  </Button>
+                </TableCell>
+                <TableCell className="text-center">
+                  ${order.price.toFixed(2)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       ) : (
         <div className="text-center py-12 border-2 border-dashed rounded-lg">
-            <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No Orders Yet</h3>
-            <p className="text-muted-foreground mb-4">Looks like you haven't placed any orders. Start shopping now!</p>
-            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Link href="/products">Shop Products</Link>
-            </Button>
+          <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-xl font-semibold mb-2">No Orders Yet</h3>
+          <p className="text-muted-foreground mb-4">
+            Looks like you haven't placed any orders. Start shopping now!
+          </p>
+          <Button
+            asChild
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            <Link href="/products">Shop Products</Link>
+          </Button>
         </div>
       )}
       <div className="flex justify-between items-center">
@@ -71,13 +126,19 @@ export default function CartListComponent({handleCheckout}: { handleCheckout: (c
         <div className="flex items-center space-x-2">
           <span className="text-lg font-semibold">Total:</span>
           <span className="text-2xl font-bold text-primary">
-            ${cartList.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
+            $
+            {cartList
+              .reduce((total, item) => total + item.price * item.quantity, 0)
+              .toFixed(2)}
           </span>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleCheckout(cartList)}>
-          Proceed to Checkout
-        </Button>
+          <Button
+            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+            onClick={() => handleCheckoutProcess()}
+          >
+            Proceed to Checkout
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
   );
 }

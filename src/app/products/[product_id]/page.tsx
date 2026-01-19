@@ -4,6 +4,8 @@ import Image from "next/image";
 import { ShoppingCart, Star } from "lucide-react";
 import { useContext, useState } from "react";
 import { ProductsContext } from "@/hooks/products-state";
+import { UserContext } from "@/hooks/user-state";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShopingCartContext } from "@/hooks/shopingCart-state";
 import { useToast } from "@/hooks/use-toast";
@@ -17,17 +19,23 @@ export default function ProductPage({
   const { useProductById } = useContext(ProductsContext);
   const { toast } = useToast();
   const { useAddToCart } = useContext(ShopingCartContext);
+  const { isAuthenticated } = useContext(UserContext);
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const product = useProductById(params.product_id);
 
   const handleAddToCart = (product: Product, quantity: number) => {
+    if (!isAuthenticated) {
+      router.push("/login"); // Redirect to login if not authenticated
+      return;
+    }
     useAddToCart(product, quantity);
     toast({
       title: "Added to cart!",
       description: `${product.name} has been added to your cart.`,
     });
-    setQuantity(1); 
-  };  
+    setQuantity(1);
+  };
 
   if (!product) {
     return (
@@ -62,7 +70,7 @@ export default function ProductPage({
           </section>
           <h2 className="text-3xl font-bold mb-6">{product.brand}</h2>
           <p className="text-lg text-foreground/90 mb-4">{product.category}</p>
-          {product.rating && (
+          {/* {product.rating && (
             <div className="flex items-center mb-2">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -78,7 +86,7 @@ export default function ProductPage({
                 ({product.rating.toFixed(1)})
               </span>
             </div>
-          )}
+          )} */}
           <Button
             variant="outline"
             onClick={() => setQuantity(quantity - 1)}

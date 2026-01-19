@@ -5,26 +5,26 @@ import UserNav from '@/components/auth/user-nav';
 import { PawPrintIcon } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Icon, Search, ShoppingCart } from 'lucide-react';
+import { Icon, PawPrint, Search, ShoppingCart } from 'lucide-react';
 import { UserContext } from '@/hooks/user-state';
 import { useContext } from 'react';
 
 export default function Header() {
-  const {isAuthenticated} = useContext(UserContext);
+  const { isAuthenticated } = useContext(UserContext);
 
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-20 items-center justify-between">
+      <div className="container flex h-20 items-center justify-between px-4 md:px-8">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2 mr-6">
-            <PawPrintIcon className="h-10 w-10 text-primary" />
-            <span className="font-bold text-2xl text-primary">PawsomeMart</span>
+            <PawPrint className="h-12 w-12 text-primary mx-auto mb-3" />
+            <span className="font-bold text-2xl text-primary hidden sm:block">PawsomeMart</span>
           </Link>
         </div>
-        
+
         <div className="flex-1 justify-center px-4 lg:px-8 hidden md:flex">
-           <div className="relative w-full max-w-md">
+          <div className="relative w-full max-w-md">
             <Input
               type="search"
               placeholder="Search products & services..."
@@ -43,9 +43,9 @@ export default function Header() {
             <Link href="/cart" >
               <ShoppingCart />
             </Link>
-          ):(<></>)}
+          ) : (<></>)}
           <div className="md:hidden">
-             <MainNav /> {/* This will render the Sheet trigger for mobile */}
+            <MainNav /> {/* This will render the Sheet trigger for mobile */}
           </div>
         </div>
       </div>

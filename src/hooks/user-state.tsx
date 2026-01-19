@@ -3,6 +3,7 @@
 import React, { useState, createContext, useEffect } from "react";
 import { IUser, SessionPayload } from "@/types";
 import { getNullUser, getUserById } from "@/services/operations";
+import { toast } from "@/hooks/use-toast";
 
 export const UserContext = createContext<{
   user: IUser;
@@ -13,11 +14,11 @@ export const UserContext = createContext<{
   login: (userData: IUser) => void;
 }>({
   user: getNullUser(),
-  setUser: () => {},
+  setUser: () => { },
   isAuthenticated: false,
-  setIsAuthenticated: () => {},
-  logout: () => {},
-  login: () => {},
+  setIsAuthenticated: () => { },
+  logout: () => { },
+  login: () => { },
 });
 
 export default function UserProvider({
@@ -42,7 +43,11 @@ export default function UserProvider({
         }
       } catch (error) {
         logout();
-        console.error("Error during re-login:", error);
+        toast({
+          variant: "destructive",
+          title: "Session Expired",
+          description: "Please log in again.",
+        });
       }
     };
     !isAuthenticated && reLogin();

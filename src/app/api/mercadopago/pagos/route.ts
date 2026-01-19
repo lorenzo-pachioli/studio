@@ -1,3 +1,5 @@
+
+import "server-only";
 import {Payment} from "mercadopago";
 import {revalidatePath} from "next/cache";
 import { addSuccessOperation, mercadopago } from "@/services/mercadoPago";

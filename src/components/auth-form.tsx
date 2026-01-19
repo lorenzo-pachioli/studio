@@ -60,7 +60,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
         router.push("/account/dashboard");
       } catch (error) {
         logout();
-        console.error("Login failed", error);
         toast({
           variant: "destructive",
           title: "Login Failed",
@@ -86,11 +85,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
             addresses: [],
             boughtProducts: [],
             boughtServices: [],
+            openCart: [],
           };
 
           // Save the new user data to the database
-          await setData("users", userData.uid, userData);
-          await createSession(userData.uid);
+          await setData("users", userCredential.user.uid, userData);
+          await createSession(userCredential.user.uid);
           login(userData);
           toast({
             title: "Registration Successful!",
@@ -99,7 +99,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
           router.push("/account/dashboard");
         } catch (error) {
           logout();
-          console.error("Registration failed", error);
           toast({
             variant: "destructive",
             title: "Registration Failed",

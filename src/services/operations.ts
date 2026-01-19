@@ -1,8 +1,10 @@
 import { db } from "./firebase";
 import { ICartItem, IOrders, IUser } from "@/types";
+import { verify } from "crypto";
 import { collection, getDocs, getDoc, doc, setDoc, CollectionReference, DocumentData } from 'firebase/firestore/lite';
 
 import { } from 'firebase/firestore/lite';
+import { decrypt, verifySession } from "./statelessSession";
 
 
 export async function getUserColection(coll: string): Promise<any[]> {
@@ -29,7 +31,8 @@ export const getNullUser = (): IUser => {
     email: "",
     emailVerified: false,
     boughtProducts: [],
-    boughtServices: []
+    boughtServices: [],
+    openCart: []
   };
   return newUser;
 }
@@ -61,8 +64,8 @@ export async function getUserById(id: string): Promise<IUser> {
   const docSnap = await getDoc(doc(db, "users", id));
   const data = docSnap.data();
   if (data) {
-    const newUser = {
-      uid: data.uid,
+    const newUser = {    
+      uid: id,
       displayName: data.displayName, // Use provided name if available
       photoURL: data.photoURL || "",
       email: data.email,
@@ -70,12 +73,27 @@ export async function getUserById(id: string): Promise<IUser> {
       addresses: data.addresses || [],
       boughtProducts: data.boughtProducts || [],
       boughtServices: data.boughtServices || [],
+      openCart: data.openCart || []
     };
     return newUser;
   } else {
     return getNullUser();
   }
 }
+
+export const updateUserCart = async (user: IUser, cartItems: ICartItem[]) => {
+  const session = await verifySession();
+  if (!session.isAuth) {
+    return null;
+  }
+  const user_id = await decrypt(session.cookie);
+  if (!user_id) {
+    return "User ID mismatch or not authenticated";
+  }
+  const userRef = doc(db, "users", user_id.uid);
+  const data = await setDoc(userRef, { ...user, openCart: cartItems });
+  return data;
+};
 
 export async function getCartItemById(id: string): Promise<ICartItem> {
   const docSnap = await getDoc(doc(db, "cart_items", id));

@@ -1,20 +1,30 @@
 'use client';
 import "firebase/firestore";
+import { toast } from "@/hooks/use-toast";
 import { signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword } from "firebase/auth";
 import { setData, getDataById } from "./operations";
 import { IUser } from "@/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
+import { decrypt, deleteSession, verifySession } from "./statelessSession";
 
 const provider = new GoogleAuthProvider();
 
 
 const addUserToFirestore = async (user: IUser) => {
 
-  const { uid } = user;
-  const userExist = await getDataById("Users", uid);
+  const session = await verifySession();
+  if (!session.isAuth) {
+    return null;
+  }
+  const cookie = await decrypt(session.cookie);
+  if (!cookie || !cookie.uid) {
+    return null;
+  }
+
+  const userExist = await getDataById("Users", cookie.uid);
   if (!userExist) {
-    await setData("Users", uid, user);
+    await setData("Users", cookie.uid, user);
   }
 };
 
@@ -37,8 +47,11 @@ export default async function logInWithEmail(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   } catch (error) {
-    console.error("Error logging in with email:", error);
-    throw error;
+    toast({
+      variant: "destructive",
+      title: "Login Error",
+      description: "An error occurred while logging in with email.",
+    });
   }
 }
 
@@ -49,25 +62,29 @@ export const userAuth = async () => {
 
     const firebaseUser = userCredentials.user;
     const userToAdd: IUser = {
-      uid: firebaseUser.uid,
+      uid: userCredentials.user.uid,
       displayName: firebaseUser.displayName || "",
       photoURL: firebaseUser.photoURL || "",
       addresses: [],
       email: firebaseUser.email || "",
-      emailVerified: firebaseUser.emailVerified
+      emailVerified: firebaseUser.emailVerified || false,
+      boughtProducts: [],
+      boughtServices: [],
+      openCart: []
     };
 
     addUserToFirestore(userToAdd);
     return userCredentials.user;
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.log(err.message);
-    } else {
-      console.log(err);
-    }
+    toast({
+      variant: "destructive",
+      title: "Authentication Error",
+      description: "An error occurred during authentication.",
+    });
   }
 };
 
 export const loggedOut = async () => {
+  deleteSession();
   signOut(auth);
 };

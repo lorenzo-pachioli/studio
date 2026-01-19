@@ -1,7 +1,6 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { mockAddresses } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -91,7 +90,7 @@ export default function AddressesPage() {
       addresses: user.addresses.filter((addr) => addr.uid !== id),
     };
     setUser(newUser);
-    setData("users", user.uid, user).then(() => {});
+    setData("users", user.uid, user).then(() => { });
     toast({
       title: "Address Deleted",
       description: "The address has been removed.",
@@ -154,10 +153,8 @@ export default function AddressesPage() {
         ...formAddress,
       } as IAddress;
       const newUser = user;
-      console.log("newUser", newUser);
       newUser.addresses.push(newAddress);
       setUser(newUser);
-      console.log("user", user);
       setData("users", user.uid, user).then(() =>
         toast({
           title: "Address Added",
@@ -192,9 +189,8 @@ export default function AddressesPage() {
           {user.addresses.map((address) => (
             <Card
               key={address.uid}
-              className={`hover:shadow-lg transition-shadow ${
-                address.isDefault ? "border-2 border-primary" : ""
-              }`}
+              className={`hover:shadow-lg transition-shadow ${address.isDefault ? "border-2 border-primary" : ""
+                }`}
             >
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -270,7 +266,7 @@ export default function AddressesPage() {
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>
               {editingAddress ? "Edit Address" : "Add New Address"}
@@ -281,9 +277,9 @@ export default function AddressesPage() {
                 : "Enter the details for your new address."}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="type" className="text-right">
+          <div className="flex flex-col items-start justify-start gap-4 py-4">
+            <div className="grid grid-cols-4 items-center justify-between gap-4">
+              <Label htmlFor="type" className="text-left w-10">
                 Type
               </Label>
               <Input
@@ -291,11 +287,11 @@ export default function AddressesPage() {
                 name="type"
                 value={formAddress.type || "Home"}
                 onChange={handleInputChange}
-                className="col-span-3"
+                className="col-span-3 w-full"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="addressLine1" className="text-right">
+            <div className="grid grid-cols-4 items-center justify-between gap-4">
+              <Label htmlFor="addressLine1" className="text-left w-10">
                 Address Line 1
               </Label>
               <Input
@@ -303,11 +299,11 @@ export default function AddressesPage() {
                 name="addressLine1"
                 value={formAddress.addressLine1 || ""}
                 onChange={handleInputChange}
-                className="col-span-3"
+                className="col-span-3 w-full"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="city" className="text-right">
+            <div className="grid grid-cols-4 items-center justify-between gap-4">
+              <Label htmlFor="city" className="text-left w-10">
                 City
               </Label>
               <Input
@@ -315,11 +311,11 @@ export default function AddressesPage() {
                 name="city"
                 value={formAddress.city || ""}
                 onChange={handleInputChange}
-                className="col-span-3"
+                className="col-span-3 w-full"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="state" className="text-right">
+            <div className="grid grid-cols-4 items-center justify-between gap-4">
+              <Label htmlFor="state" className="text-left w-10">
                 State
               </Label>
               <Input
@@ -327,11 +323,11 @@ export default function AddressesPage() {
                 name="state"
                 value={formAddress.state || ""}
                 onChange={handleInputChange}
-                className="col-span-3"
+                className="col-span-3 w-full"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="zip" className="text-right">
+            <div className="grid grid-cols-4 items-center justify-between gap-4">
+              <Label htmlFor="zip" className="text-left w-10">
                 Zip Code
               </Label>
               <Input
@@ -339,7 +335,7 @@ export default function AddressesPage() {
                 name="zip"
                 value={formAddress.zip || ""}
                 onChange={handleInputChange}
-                className="col-span-3"
+                className="col-span-3 w-full"
               />
             </div>
             <div className="flex items-center space-x-2 col-start-2 col-span-3">

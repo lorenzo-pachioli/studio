@@ -10,26 +10,13 @@ export const ServicesContext = createContext<{
   useServiceById: (id: string) => Service | undefined;
 }>({
   services: [],
-  setServices: () => {},
+  setServices: () => { },
   useServiceById: () => undefined,
 });
 
-export default function ServicesProvider({ children }: any) {
-  const [services, setServices] = useState<Service[]>([]);
+export default function ServicesProvider({ children, initialServices }: any) {
+  const [services, setServices] = useState<Service[]>(initialServices);
   const [serviceById, setServiceById] = useState<Service | undefined>();
-
-  // Initialize services from local storage or set to empty array
-  React.useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const servicesList = await getCollections("services");
-        setServices(servicesList);
-      } catch (error) {
-        console.error("Error initializing services:", error);
-      }
-    };
-    fetchServices();
-  }, []);
 
   const useServiceById = (id: string): Service | undefined => {
     const service = services.find((service) => {

@@ -40,7 +40,7 @@ export default function HomePage() {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/20 via-background to-secondary/20 rounded-xl shadow-lg p-8 md:p-16 text-center md:text-left">
+      <section className="bg-gradient-to-br from-primary/20 via-background to-secondary/20 rounded-xl shadow-lg p-4 md:p-16 text-center md:text-left">
         <div className="container mx-auto grid md:grid-cols-2 gap-8 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-800">
@@ -76,7 +76,7 @@ export default function HomePage() {
           </div>
           <div className="hidden md:block">
             <Image
-              src="https://placehold.co/600x400.png"
+              src="https://res.cloudinary.com/dnridopyi/image/upload/v1768836927/Happy_pets_playing_mcjfqg.jpg"
               alt="Happy pets playing"
               width={600}
               height={400}
@@ -111,9 +111,9 @@ export default function HomePage() {
 
       {/* Promotion Section */}
       {currentPromotion && (
-        <section className={`${promotionIndex%2 === 0 ? `bg-accent` : `bg-secondary`} text-accent-foreground rounded-xl shadow-lg p-8 md:p-12 relative`}>
-          <div className="container mx-auto grid md:grid-cols-2 gap-8 items-center">
-            <div className="order-2 md:order-1">
+        <section className={`${promotionIndex % 2 === 0 ? `bg-accent` : `bg-secondary`} text-accent-foreground rounded-xl shadow-lg p-4 md:p-12 relative`}>
+          <div className="container mx-auto my-10 grid md:grid-cols-2 gap-9 items-center">
+            <div className="order-2 md:order-1 flex flex-col items-center text-center md:items-start md:text-left">
               <h2 className="text-3xl font-bold mb-4">
                 {currentPromotion.title}
               </h2>
@@ -135,14 +135,14 @@ export default function HomePage() {
                 alt={currentPromotion.title}
                 width={500}
                 height={300}
-                className="rounded-lg shadow-xl mx-auto"
+                className="rounded-lg shadow-xl mx-auto h-64 md:h-80 w-full object-cover"
                 data-ai-hint={currentPromotion.dataAiHint || "pet promotion"}
               />
             </div>
           </div>
           {/* Carousel Controls */}
           {promotions.length > 1 && (
-            <div className="absolute inset-x-0 bottom-4 flex justify-center gap-4">
+            <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-4">
               <button
                 onClick={handlePrev}
                 className="bg-accent-foreground text-accent px-3 py-1 rounded-full shadow hover:bg-accent-foreground/90 transition"
@@ -154,11 +154,10 @@ export default function HomePage() {
                 {promotions.map((_, idx) => (
                   <span
                     key={idx}
-                    className={`inline-block w-2 h-2 rounded-full ${
-                      promotionIndex === idx
-                        ? "bg-primary"
-                        : "bg-accent-foreground/30"
-                    }`}
+                    className={`inline-block w-2 h-2 rounded-full ${promotionIndex === idx
+                      ? "bg-primary"
+                      : "bg-accent-foreground/30"
+                      }`}
                   />
                 ))}
               </div>

@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { PawPrintIcon } from '@/components/icons';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Facebook, Instagram, PawPrint, Twitter } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -9,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
           <div>
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <PawPrintIcon className="h-8 w-8 text-primary" />
+              <PawPrint className="h-12 w-12 text-primary mx-auto mb-3" />
               <span className="font-bold text-xl">PawsomeMart</span>
             </Link>
             <p className="text-sm text-foreground/80">
@@ -22,15 +21,15 @@ export default function Footer() {
               <li><Link href="/products" className="hover:text-primary transition-colors">Products</Link></li>
               <li><Link href="/services" className="hover:text-primary transition-colors">Services</Link></li>
               <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li> {/* Added contact link */}
+              <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="font-semibold text-lg mb-3 text-foreground">Customer Service</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li> {/* Added FAQ link */}
-              <li><Link href="/shipping" className="hover:text-primary transition-colors">Shipping & Returns</Link></li> {/* Added S&R link */}
-              <li><Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li> {/* Added Privacy link */}
+              <li><Link href="#" className="hover:text-primary transition-colors">FAQ</Link></li>
+              <li><Link href="#" className="hover:text-primary transition-colors">Shipping & Returns</Link></li>
+              <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
           <div>
