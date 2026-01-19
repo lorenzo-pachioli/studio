@@ -9,7 +9,7 @@ import ProductsProvider from "@/hooks/products-state";
 import ServicesProvider from "@/hooks/services-state";
 import ShopingCartProvider from "@/hooks/shopingCart-state";
 import PromotionsProvider from "@/hooks/promotions-state";
-import { decrypt, verifySession } from "@/services/statelessSession";   
+import { decrypt, verifySession } from "@/services/statelessSession";
 import { Product, Promotion, Service } from "@/types";
 import { fetchProducts, fetchPromotions, fetchServices } from "@/lib/fetchFunctions";
 
@@ -28,7 +28,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   const cookie = (await verifySession()).cookie;
   const session = await decrypt(cookie);
   const products = await fetchProducts();
@@ -56,7 +56,7 @@ export default async function RootLayout({
               <PromotionsProvider initialPromotitons={promotions || [] as Promotion[]}>
                 <ShopingCartProvider>
                   <Header />
-                  <main className="flex-grow container mx-auto px-4 py-8">
+                  <main className="flex-grow container mx-auto px-2 md:px-4 py-8">
                     {children}
                   </main>
                   <Footer />

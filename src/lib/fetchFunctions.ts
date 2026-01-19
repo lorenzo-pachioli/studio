@@ -5,7 +5,7 @@ const fetchProducts = async () => {
     const productsList = await getCollections("products");
     return productsList;
   } catch (error) {
-    console.error("Error initializing products:", error);
+    // Error initializing products
   }
 };
 
@@ -14,7 +14,7 @@ const fetchPromotions = async () => {
     const promotionsList = await getCollections("promotions");
     return promotionsList;
   } catch (error) {
-    console.error("Error initializing promotions:", error);
+    // Error initializing promotions
   }
 };
 
@@ -23,8 +23,8 @@ const fetchServices = async () => {
     const servicesList = await getCollections("services");
     return servicesList;
   } catch (error) {
-    console.error("Error initializing services:", error);
+    // Error initializing services
   }
 };
 
-export {fetchProducts, fetchPromotions, fetchServices};
+export { fetchProducts, fetchPromotions, fetchServices };

@@ -2,7 +2,6 @@
 
 import React, { useState, createContext, useEffect, useContext } from "react";
 import { ICartItem, Product } from "@/types";
-import { mockCartItems } from "@/lib/data";
 import { UserContext } from "./user-state";
 import { updateUserCart } from "@/services/operations";
 
@@ -22,7 +21,7 @@ export const ShopingCartContext = createContext<{
 
 export default function ShopingCartProvider({ children }: any) {
   const { user } = useContext(UserContext);
-  const [ cartList, setCartItems ] = useState<ICartItem[]>(mockCartItems);
+  const [ cartList, setCartItems ] = useState<ICartItem[]>([]);
   const [cartItemById, setCartItemById] = useState<ICartItem | undefined>();
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export default function ShopingCartProvider({ children }: any) {
       }
     }
     initCartValue();
-    console.log("cart:", cartList);
   }, [user]);
 
   const useCartItemById = (uid: string): ICartItem|undefined => {
@@ -47,7 +45,6 @@ export default function ShopingCartProvider({ children }: any) {
     const updatedCartList = cartList.map((item) => {
       if (item.product_id === uid) {
         item.quantity -= quantity;
-        console.log("Removing item:", item);
       }
       return item;
     }).filter(item => item.quantity > 0); // Filter out items with zero quantity

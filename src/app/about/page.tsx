@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import { PawPrintIcon } from '@/components/icons';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, ShieldCheck, Users } from 'lucide-react';
+import { Heart, PawPrint, ShieldCheck, Users } from 'lucide-react';
 
 export default function AboutUsPage() {
   return (
     <div className="container mx-auto py-12 px-4">
       <section className="text-center mb-16">
-        <PawPrintIcon className="h-20 w-20 text-primary mx-auto mb-6" />
+        <PawPrint className="h-12 w-12 text-primary mx-auto mb-3" />
         <h1 className="text-5xl font-extrabold mb-4">About PawsomeMart</h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           Dedicated to the health, happiness, and well-being of pets everywhere. Discover our story and commitment to your furry, scaled, or feathered family members.
@@ -18,7 +18,7 @@ export default function AboutUsPage() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <Image
-              src="https://placehold.co/600x450.png"
+              src="https://res.cloudinary.com/dnridopyi/image/upload/v1768837461/Team_PawsomeMart_with_pets_sglvni.webp"
               alt="Team PawsomeMart with pets"
               width={600}
               height={450}

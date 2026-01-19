@@ -1,5 +1,6 @@
 'use client';
 import "firebase/firestore";
+import { toast } from "@/hooks/use-toast";
 import { signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword } from "firebase/auth";
 import { setData, getDataById } from "./operations";
 import { IUser } from "@/types";
@@ -46,8 +47,11 @@ export default async function logInWithEmail(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   } catch (error) {
-    console.error("Error logging in with email:", error);
-    throw error;
+    toast({
+      variant: "destructive",
+      title: "Login Error",
+      description: "An error occurred while logging in with email.",
+    });
   }
 }
 
@@ -58,6 +62,7 @@ export const userAuth = async () => {
 
     const firebaseUser = userCredentials.user;
     const userToAdd: IUser = {
+      uid: userCredentials.user.uid,
       displayName: firebaseUser.displayName || "",
       photoURL: firebaseUser.photoURL || "",
       addresses: [],
@@ -71,11 +76,11 @@ export const userAuth = async () => {
     addUserToFirestore(userToAdd);
     return userCredentials.user;
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.log(err.message);
-    } else {
-      console.log(err);
-    }
+    toast({
+      variant: "destructive",
+      title: "Authentication Error",
+      description: "An error occurred during authentication.",
+    });
   }
 };
 

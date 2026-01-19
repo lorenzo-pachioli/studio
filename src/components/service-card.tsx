@@ -13,7 +13,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ service }: ServiceCardProps) {
 
   return (
-    <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
+    <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full group">
       <CardHeader className="p-0">
         <Link href={`/services/${service.uid}`} aria-label={`View details for ${service.name}`}>
           <Image
@@ -21,7 +21,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             alt={service.name}
             width={300}
             height={200}
-            className="w-full h-40 object-cover"
+            className="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105"
             data-ai-hint={service.dataAiHint || "pet service"}
           />
         </Link>
@@ -29,7 +29,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       <CardContent className="p-4 flex-grow">
         <Badge variant="secondary" className="mb-2 bg-secondary/70 text-secondary-foreground">{service.category}</Badge>
         <Link href={`/services/${service.uid}`}>
-         <CardTitle className="text-lg font-semibold mb-1 hover:text-primary transition-colors">{service.name}</CardTitle>
+          <CardTitle className="text-lg font-semibold mb-1 hover:text-primary transition-colors">{service.name}</CardTitle>
         </Link>
         <p className="text-sm text-muted-foreground mb-2 h-10 overflow-hidden">{service.description}</p>
         {service.location && (
@@ -45,7 +45,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </div>
         )}
         {service.rating && (
-           <div className="flex items-center">
+          <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}

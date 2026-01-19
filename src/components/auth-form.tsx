@@ -60,7 +60,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
         router.push("/account/dashboard");
       } catch (error) {
         logout();
-        console.error("Login failed", error);
         toast({
           variant: "destructive",
           title: "Login Failed",
@@ -78,6 +77,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             password
           );
           const userData = {
+            uid: userCredential.user.uid,
             displayName: name || userCredential.user.email, // Use provided name if available
             photoURL: userCredential.user.photoURL || "",
             email: userCredential.user.email || email,
@@ -99,7 +99,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
           router.push("/account/dashboard");
         } catch (error) {
           logout();
-          console.error("Registration failed", error);
           toast({
             variant: "destructive",
             title: "Registration Failed",

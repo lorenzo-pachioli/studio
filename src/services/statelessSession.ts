@@ -1,8 +1,6 @@
 'use server';
-import { SignJWT, jwtVerify, JWTPayload } from 'jose';
+import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-import { User } from "firebase/auth";
-import { redirect } from "next/navigation";
 import { IverifySessionPayload, SessionPayload } from '@/types';
 
 const secretKey = process.env.SECRET;

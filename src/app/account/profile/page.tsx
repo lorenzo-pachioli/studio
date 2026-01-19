@@ -18,10 +18,10 @@ export default function ProfilePage() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); 
-  const {user, setUser,userLocalStorage,isAuthenticated,setIsAuthenticated} = useContext(UserContext);
+  const {user} = useContext(UserContext);
   
   useEffect(() => {
-    if (typeof window !== 'undefined' && user.email && user.displayName) {
+    if (user.email && user.displayName) {
       setName(user.displayName );
       setEmail(user.email);
     }
@@ -70,9 +70,9 @@ export default function ProfilePage() {
       
       <div className="flex items-center space-x-4 p-4 bg-secondary/20 rounded-lg">
         <UserCircle className="h-16 w-16 text-primary" />
-        <div>
-          <h3 className="text-xl font-semibold">{user.displayName}</h3>
-          <p className="text-muted-foreground">{user.email}</p>
+        <div className="h-full w-fit">
+          <h3 className="text-xl font-semibold">Username: {user.displayName}</h3>
+          <p className="text-muted-foreground">Email: {user.email}</p>
         </div>
       </div>
 

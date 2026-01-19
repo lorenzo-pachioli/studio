@@ -15,7 +15,7 @@ export const handleAddToCart = (name: string) => {
   });
 };
 
-export function onRenderCallback (
+export function onRenderCallback(
   id: any, // the "id" prop of the Profiler tree that has just committed
   phase: any, // either "mount" (if the tree just mounted) or "update" (if it re-rendered)
   actualDuration: any, // time spent rendering the committed update
@@ -24,5 +24,5 @@ export function onRenderCallback (
   commitTime: any // when React committed this update
 ) {
   // Aggregate or log the performance data
-  console.log(`${id} rendered in ${actualDuration}ms`);
+  // Aggregate or log the performance data
 }

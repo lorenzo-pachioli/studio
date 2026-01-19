@@ -1,5 +1,5 @@
  
- export const mockCartItems = [
+const mockCartItems = [
 
  ];
 
@@ -23,7 +23,7 @@ export const mockOrderHistory = [
   },
 ];
 
-export const mockAddresses = [
+const mockAddresses = [
   {
     uid: 'ADDR001',
     type: 'Home',

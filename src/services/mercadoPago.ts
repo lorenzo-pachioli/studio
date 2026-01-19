@@ -17,7 +17,6 @@ export const mercadopago = new MercadoPagoConfig({
     idempotencyKey: 'abc'
   }
 });
-console.log("Mercado Pago Config initialized:", !!process.env.MP_ACCESS_TOKEN);
 
 export const addSuccessOperation = async (message: Message): Promise<void> => {
 
@@ -34,9 +33,9 @@ export const addSuccessOperation = async (message: Message): Promise<void> => {
       user_id: message.order.user_id,
       items: message.order.items,
       quantity: message.order.quantity,
-      created_at: new Date(message.order.created_at || new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"})),
+      created_at: new Date(message.order.created_at || new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })),
       total: message.order.total,
-      status: "completed", 
+      status: "completed",
       meli_id: message.id
     };
 
@@ -44,9 +43,8 @@ export const addSuccessOperation = async (message: Message): Promise<void> => {
     const response = await firestore.collection("Orders").doc(String(newOrder.uid)).set(newOrder);
     const userData = userExist.data();
     await firestore.collection("users").doc(String(newOrder.user_id)).set({ openCart: [], boughtProducts: [...(userData?.boughtProducts || []), newOrder.uid] }, { merge: true });
-    console.log("Order added successfully:", response);
   } catch (error) {
-    console.error("Error adding order:", error);
+    // Error adding order
   }
 }
 
@@ -63,7 +61,7 @@ export const submitOrder = async (order: ICartItem[]) => {
       user_id: user_id?.uid,
       items: order,
       quantity: order.reduce((total, item) => total + item.quantity, 0),
-      created_at: new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"})),
+      created_at: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })),
       status: "pending",
       total: order.reduce((total, item) => total + item.price * item.quantity, 0),
     };
@@ -83,13 +81,6 @@ export const submitOrder = async (order: ICartItem[]) => {
     // Devolvemos el init point (url de pago) para que el usuario pueda pagar
     return preference.init_point!;
   } catch (error) {
-    console.error("Error details:", {
-      name: (error as any)?.name,
-      message: (error as any)?.message,
-      stack: (error as any)?.stack,
-      cause: (error as any)?.cause,
-      response: (error as any)?.response?.data || (error as any)?.response
-    });
     throw error;
   }
 }

@@ -5,7 +5,6 @@ import { verifySession } from './services/statelessSession';
 
 export async function middleware(request: NextRequest) {
   const session = await verifySession();
-  //console.log("Session in middleware:", session);
 
   // Rutas protegidas definidas en el config
   const protectedPaths = ['/cart', '/account', '/account/:path*'];

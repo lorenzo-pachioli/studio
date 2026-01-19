@@ -24,6 +24,7 @@ export async function getUserColection(coll: string): Promise<any[]> {
 
 export const getNullUser = (): IUser => {
   const newUser: IUser = {
+    uid: "",
     displayName: "",
     photoURL: "",
     addresses: [],
@@ -63,7 +64,8 @@ export async function getUserById(id: string): Promise<IUser> {
   const docSnap = await getDoc(doc(db, "users", id));
   const data = docSnap.data();
   if (data) {
-    const newUser = {
+    const newUser = {    
+      uid: id,
       displayName: data.displayName, // Use provided name if available
       photoURL: data.photoURL || "",
       email: data.email,
@@ -88,9 +90,7 @@ export const updateUserCart = async (user: IUser, cartItems: ICartItem[]) => {
   if (!user_id) {
     return "User ID mismatch or not authenticated";
   }
-  console.log("Updating cart for user:", user_id.uid, "with items:", cartItems);
   const userRef = doc(db, "users", user_id.uid);
-  console.log("User reference:", user);
   const data = await setDoc(userRef, { ...user, openCart: cartItems });
   return data;
 };

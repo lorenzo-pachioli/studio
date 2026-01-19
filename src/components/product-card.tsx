@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { UserContext } from "@/hooks/user-state";
 import type { Product } from "@/types";
 import {
   Card,
@@ -25,8 +27,14 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
   const { useAddToCart } = useContext(ShopingCartContext);
+  const { isAuthenticated } = useContext(UserContext);
+  const router = useRouter();
 
   const handleAddToCart = (product: Product, quantity: number) => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
     useAddToCart(product, quantity);
     toast({
       title: "Added to cart!",
@@ -35,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
+    <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full group">
       <CardHeader className="p-0 relative">
         <Link
           href={`/products/${product.uid}`}
@@ -46,7 +54,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             width={300}
             height={300}
-            className="w-full h-48 object-cover bg-gray-500"
+            className="w-full h-48 object-cover bg-gray-500 transition-transform duration-300 group-hover:scale-105"
             data-ai-hint={product.dataAiHint || "pet product"}
           />
         </Link>
