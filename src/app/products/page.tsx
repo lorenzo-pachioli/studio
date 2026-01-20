@@ -19,12 +19,14 @@ import { Profiler } from "react";
 import { onRenderCallback } from "@/lib/utils";
 
 export default function ProductsPage() {
+  const { products } = useContext(ProductsContext);
+  const maxPrice = Math.max(...products.map((p) => p.price), 100);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedBrand, setSelectedBrand] = useState("All");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice]);
   const [sortBy, setSortBy] = useState("name-asc");
-  const { products } = useContext(ProductsContext);
 
   const categories = ["All", ...new Set(products.map((p) => p.category))];
   const brands = [
@@ -62,11 +64,11 @@ export default function ProductsPage() {
     setSearchTerm("");
     setSelectedCategory("All");
     setSelectedBrand("All");
-    setPriceRange([0, 100]);
+    setPriceRange([0, maxPrice]);
     setSortBy("name-asc");
   };
 
-  const maxPrice = Math.max(...products.map((p) => p.price), 100);
+
 
   return (
     <Profiler id="MyComponent" onRender={onRenderCallback}>

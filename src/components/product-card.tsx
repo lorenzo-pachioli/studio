@@ -101,6 +101,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           </CardDescription>
         </Link>
       </CardContent>
+      <CardContent className="p-0 py-2 px-4">
+        <p className="text-xl font-bold text-primary text-right">${product.price.toFixed(2)}</p>
+      </CardContent>
 
       {/* <CardContent className="p-4 flex-grow">
         <Link href={`/products/${product.uid}`}>

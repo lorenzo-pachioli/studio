@@ -57,14 +57,14 @@ export async function getCollections(coll: string): Promise<any[]> {
 
   const docRef = collection(db, coll);
   const docList = await getDocs(docRef);
-  return docList.docs.map(doc => ({ ...doc.data() }));
+  return docList.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 }
 
 export async function getUserById(id: string): Promise<IUser> {
   const docSnap = await getDoc(doc(db, "users", id));
   const data = docSnap.data();
   if (data) {
-    const newUser = {    
+    const newUser = {
       uid: id,
       displayName: data.displayName, // Use provided name if available
       photoURL: data.photoURL || "",
